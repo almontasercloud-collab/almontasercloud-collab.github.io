@@ -4,7 +4,7 @@ date: 2026-06-19 12:00:00 +0300
 categories: [Blog, Introduction]
 tags: [welcome, networking, cybersecurity, technology]
 image:
-  path: ./assets/img/post_covers/welcome.png
+  path: /assets/img/post_covers/welcome.png
 pin: true
 ---
 
