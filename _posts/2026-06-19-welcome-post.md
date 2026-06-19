@@ -20,12 +20,12 @@ I am **Almontaser Babiker**, a Network Engineer passionate about building, secur
 
 My main areas of interest include:
 
-- 🌐 Network Engineering and Architecture
-- 🔐 Cybersecurity and Security Operations
-- 🛡️ Cisco technologies and enterprise networking
-- ☁️ Cloud infrastructure
-- ⚙️ Automation and system engineering
-- 🧪 Technical research and experimental projects
+- 🌐 Network Engineering and Architecture.
+- 🔐 Cybersecurity and Security Operations.
+- 🛡️ Cisco technologies and enterprise networking.
+- ☁️ Cloud infrastructure.
+- ⚙️ Automation and system engineering.
+- 🧪 Technical research and experimental projects.
 
 ## What You Will Find Here
 
