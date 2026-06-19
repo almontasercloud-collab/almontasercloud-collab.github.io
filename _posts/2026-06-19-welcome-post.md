@@ -3,6 +3,9 @@ title: Welcome to My Technical Blog
 date: 2026-06-19 12:00:00 +0300
 categories: [Blog, Introduction]
 tags: [welcome, networking, cybersecurity, technology]
+image:
+  path: /assets/img/post_covers/welcome.webp
+  alt: Welcome
 pin: true
 ---
 
