@@ -22,7 +22,7 @@ description: >- # used by seo meta and the atom feed
       Almontaser Babiker's technical portfolio and blog covering network engineering, Security technologies, automation, and infrastructure solutions.
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
-url: "http://almontaserbabiker.com"
+url: "https://almontaserbabiker.com"
 
 github:
   username: almontasercloud-collab # change to your GitHub username
