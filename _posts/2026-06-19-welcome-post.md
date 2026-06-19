@@ -5,7 +5,6 @@ categories: [Blog, Introduction]
 tags: [welcome, networking, cybersecurity, technology]
 image:
   path: ./assets/img/post_covers/welcome.png
-  alt: Welcome 
 pin: true
 ---
 
