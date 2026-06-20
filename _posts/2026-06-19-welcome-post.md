@@ -10,7 +10,7 @@ pin: true
 
 # Welcome 👋
 
-Welcome to my personal Website and technical blog.
+to my personal Website and technical blog.
 
 I created this space to share my journey, knowledge, experiments, and practical experiences in the world of **network engineering, cybersecurity, cloud technologies, and IT infrastructure**.
 
