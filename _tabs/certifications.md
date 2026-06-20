@@ -1,17 +1,31 @@
 ---
-icon: fas fa-certificate
+layout: page
+title: Certifications
+icon: fas fa-shield-halved
 order: 3
 ---
 
-Professional certifications and technical learning journey.
 
-## Cisco
+A strategic roadmap of validated expertise and ongoing specializations in infrastructure security, policy enforcement, and enterprise network architecture.
 
-- Cisco Certified Specialist - Security Core (SCOR 350-701)
-- Cisco Certified Network Associate (CCNA)
-- Huawie Certified ICT associate (HCIA Routing and Switching)
+---
 
+### Professional Credentials
 
-## Current Learning
+| Framework | Certification / Specialist Designation | Status |
+| :--- | :--- | :--- |
+| Cisco | Cisco Certified Specialist - Security Core (SCOR 350-701) | **Active** |
+| Cisco| Cisco Certified Network Associate (CCNA) | **Active** |
+| Huawei | Huawei Certified ICT Associate (HCIA-Routing & Switching) | **Active** |
 
-- Cisco Identity Service Engine 
+---
+
+###  Active Vector
+
+| Focus Area | Objective | Application |
+| :--- | :--- | :--- |
+| Cisco ISE | Implementing & Administering Cisco Identity Services Engine | Advanced Access Control & Zero-Trust Architecture |
+
+---
+
+>  **Architectural Intent:** Validating deep-dive security core competencies while actively engineering zero-trust framework designs and identity management pipelines.

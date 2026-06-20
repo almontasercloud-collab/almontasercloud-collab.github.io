@@ -3,7 +3,6 @@ icon: fas fa-user
 order: 4
 ---
 
-# About Me
 
 Hello, I'm **Almontaser Babiker** — a Network Engineer based in Doha, Qatar.
 
