@@ -1,6 +1,6 @@
 ---
 title: Certifications
-layout: page
+date: 2026-06-19 12:00:00 +0300
 icon: fas fa-shield-halved
 order: 3
 ---
@@ -9,7 +9,7 @@ A strategic roadmap of validated expertise and ongoing specializations in infras
 
 ---
 
-## My Top Professional Credentials:
+## Certificates Board:
 
 ### Cisco Certified Specialist - Security Core (SCOR 350-701)
 
