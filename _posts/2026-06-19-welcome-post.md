@@ -21,6 +21,17 @@ It is not a collection of tutorials or theory notes. It is a working log of expe
 
 Writing things down forces clarity. It helps turn experience into understanding—and understanding into better engineering decisions over time.
 
+## What You Will Find Here
+
+This blog will contain:
+
+- Technical explanations, references, and deep dives into networking and security concepts
+- Real-world network troubleshooting experiences and case studies
+- Security solutions across multiple vendors and platforms
+- Lab environments, simulations, and practical testing scenarios
+- Project and proof-of-concept implementations
+- Lessons learned from production environments and operational challenges
+- Professional references and other recruitment-related information
 
 ## About Me
 
@@ -34,18 +45,6 @@ My main areas of interest include:
 - 🧪 Technical documentation, applied research, and experimental project development
 
 You can find more information about me [here](https://almontaserbabiker.com/about/)
-
-## What You Will Find Here
-
-This blog will contain:
-
-- Technical explanations, references, and deep dives into networking and security concepts
-- Real-world network troubleshooting experiences and case studies
-- Security solutions across multiple vendors and platforms
-- Lab environments, simulations, and practical testing scenarios
-- Project and proof-of-concept implementations
-- Lessons learned from production environments and operational challenges
-- Professional references and other recruitment-related information
 
 ## Let's Build and Learn 
 
