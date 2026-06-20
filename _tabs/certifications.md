@@ -9,8 +9,6 @@ A strategic roadmap of validated expertise and ongoing specializations in infras
 
 ---
 
-## Certificates Board:
-
 ### Cisco Certified Specialist - Security Core (SCOR 350-701)
 
 ![Cisco Certified Specialist Security Core Certificate](/assets/img/certs/scor.png)
