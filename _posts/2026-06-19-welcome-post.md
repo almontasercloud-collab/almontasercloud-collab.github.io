@@ -21,27 +21,29 @@ I am **Almontaser Babiker**, a Network and Systems Engineer passionate about bui
 My main areas of interest include:
 
 - 🌐 Network Engineering and Architecture.
-- 🛡️ Cisco Security technologies and enterprise networking.
-- ☁️ Cloud infrastructure.
-- ⚙️ Automation and system engineering.
-- 🧪 Technical research and experimental projects.
+- 🛡️ Security technologies and enterprise infrastructure.
+- ⚙️ Automation and systems engineering.
+- 🧪 Technical documentation, applied research, and experimental project development.
 
 ## What You Will Find Here
 
 This blog will contain:
 
-- Technical explanations and deep dives
-- Network troubleshooting experiences
-- Cisco and security concepts
-- Lab environments and practical testing
-- Project documentation
-- Lessons learned from real-world infrastructure
+- Technical explanations, references, and deep dives into networking and security concepts
+- Real-world network troubleshooting experiences and case studies
+- Security solutions across multiple vendors and platforms
+- Lab environments, simulations, and practical testing scenarios
+- Project and proof-of-concept implementations
+- Lessons learned from production environments and operational challenges
+- Professional references and other recruitment-related information
 
 ## Why This Blog?
 
-Technology is not only about memorizing commands or passing certifications. Real growth comes from understanding how systems work, testing ideas, breaking things, and learning from the process.
+Technology is not just about memorizing procedures, commands, or passing certifications. Real growth comes from understanding how systems work, experimenting with ideas, breaking things, and learning through the process.
 
-This blog is my technical notebook — a place to document what I learn and share useful knowledge with others.
+I believe that technical knowledge—especially troubleshooting details and solution patterns—can easily be forgotten if it is not practiced in day-to-day work.
+
+This blog is my technical notebook: a place where I document what I learn, reinforce my understanding, and share useful insights with others.
 
 ## Let's Build and Learn 
 
