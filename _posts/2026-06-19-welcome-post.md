@@ -10,9 +10,17 @@ pin: true
 
 # Welcome 👋
 
-to my personal Website and technical blog.
+This blog is my technical notebook for documenting real-world work in **Network Engineering, Security, Information Systems, and IT Infrastructures**.
 
-I created this space to share my journey, knowledge, experiments, and practical experiences in **Network Engineering, Security, Cloud Technologies, and IT Infrastructures**.
+## Why This Blog?
+Most technical knowledge fades when it’s only consumed and not applied.
+
+In real engineering environments, understanding comes from repetition—breaking systems, fixing them, and observing how they behave under pressure. I use this blog to structure that process.
+
+It is not a collection of tutorials or theory notes. It is a working log of experiments, troubleshooting cases, design decisions, and lessons learned across networking, security, cloud, and infrastructure systems.
+
+Writing things down forces clarity. It helps turn experience into understanding—and understanding into better engineering decisions over time.
+
 
 ## About Me
 
@@ -20,10 +28,12 @@ I am **Almontaser Babiker**, a Network and Systems Engineer passionate about bui
 
 My main areas of interest include:
 
-- 🌐 Network Engineering and Architecture.
-- 🛡️ Security technologies and enterprise infrastructure.
-- ⚙️ Automation and systems engineering.
-- 🧪 Technical documentation, applied research, and experimental project development.
+- 🌐 Network Engineering and Architecture
+- 🛡️ Security technologies and enterprise infrastructure
+- ⚙️ Automation and systems engineering
+- 🧪 Technical documentation, applied research, and experimental project development
+
+You can find more information about me [here](https://almontaserbabiker.com/about/)
 
 ## What You Will Find Here
 
@@ -37,18 +47,8 @@ This blog will contain:
 - Lessons learned from production environments and operational challenges
 - Professional references and other recruitment-related information
 
-## Why This Blog?
-
-Technology is not just about memorizing procedures, commands, or passing certifications. Real growth comes from understanding how systems work, experimenting with ideas, breaking things, and learning through the process.
-
-I believe that technical knowledge—especially troubleshooting details and solution patterns—can easily be forgotten if it is not practiced in day-to-day work.
-
-This blog is my technical notebook: a place where I document what I learn, reinforce my understanding, and share useful insights with others.
-
 ## Let's Build and Learn 
 
 Thank you for visiting.
 
 I hope you find something useful here, and I look forward to sharing more technical content soon.
-
-**Welcome to my journey.**
