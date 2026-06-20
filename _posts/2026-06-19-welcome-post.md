@@ -1,5 +1,5 @@
 ---
-title: Welcome to My Technical Blog
+title: Let's Get Started !
 date: 2026-06-19 12:00:00 +0300
 categories: [Blog, Introduction]
 tags: [welcome, networking, technology]
