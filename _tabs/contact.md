@@ -1,4 +1,6 @@
 ---
+title: Contact
+layout: page
 icon: fas fa-network-wired
 order: 5
 ---

@@ -1,6 +1,6 @@
 ---
-layout: page
-title: Certifications
+title: "Certifications"
+layout: post
 icon: fas fa-shield-halved
 order: 3
 ---

@@ -2,7 +2,7 @@
 title: Welcome to My Technical Blog
 date: 2026-06-19 12:00:00 +0300
 categories: [Blog, Introduction]
-tags: [welcome, networking, cybersecurity, technology]
+tags: [welcome, networking, technology]
 image:
   path: /assets/img/post_covers/welcome.png
 pin: true
@@ -44,7 +44,7 @@ Technology is not only about memorizing commands or passing certifications. Real
 
 This blog is my technical notebook — a place to document what I learn and share useful knowledge with others.
 
-## Let's Build and Learn 🚀
+## Let's Build and Learn 
 
 Thank you for visiting.
 
