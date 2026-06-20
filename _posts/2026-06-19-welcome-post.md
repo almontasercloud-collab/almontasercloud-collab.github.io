@@ -10,7 +10,7 @@ pin: true
 
 # Welcome 👋
 
-This blog is my technical notebook for documenting my work in **Network Engineering, Security, Information Systems, and IT Infrastructures**.
+This blog is my technical notebook for documenting my work in **Network Engineering, Information Systems, and IT Security**.
 
 ## Why This Blog?
 Most technical knowledge fades when it’s only consumed and not applied.

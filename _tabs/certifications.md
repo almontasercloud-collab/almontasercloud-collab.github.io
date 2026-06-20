@@ -5,10 +5,6 @@ icon: fas fa-shield-halved
 order: 3
 ---
 
-A strategic roadmap of validated expertise and ongoing specializations in infrastructure security, policy enforcement, and enterprise network architecture.
-
----
-
 ### Cisco Certified Specialist - Security Core (SCOR 350-701)
 
 ![Cisco Certified Specialist Security Core Certificate](/assets/img/certs/scor.png)
