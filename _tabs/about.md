@@ -30,7 +30,7 @@ Areas I actively study and explore:
 
 - 🌐 Routing & Switching
 - 🔐 Network Security
-- 🛡️ Cybersecurity Operations
+- 🛡️ Security solutions & Operations
 - ☁️ Cloud Technologies
 - ⚙️ Automation and Infrastructure Engineering
 
