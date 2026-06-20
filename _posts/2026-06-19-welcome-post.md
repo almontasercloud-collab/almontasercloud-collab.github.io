@@ -12,11 +12,11 @@ pin: true
 
 to my personal Website and technical blog.
 
-I created this space to share my journey, knowledge, experiments, and practical experiences in the world of **network engineering, cybersecurity, cloud technologies, and IT infrastructure**.
+I created this space to share my journey, knowledge, experiments, and practical experiences in **Network Engineering, Security, Cloud Technologies, and IT Infrastructures**.
 
 ## About Me
 
-I am **Almontaser Babiker**, a Network Engineer passionate about building, securing, and understanding modern technology environments.
+I am **Almontaser Babiker**, a Network and Systems Engineer passionate about building, securing, and understanding modern technology environments.
 
 My main areas of interest include:
 
