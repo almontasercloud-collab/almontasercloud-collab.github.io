@@ -11,4 +11,3 @@ order: 5
 | <i class="fab fa-github"></i> **GitHub** | [almontasercloud-collab](https://github.com/almontasercloud-collab) | 
 | <i class="fas fa-envelope"></i> **Email** | [almontaser.babeker@gmail.com](mailto:almontaser.babeker@gmail.com) |
 
----
