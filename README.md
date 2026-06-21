@@ -2,8 +2,6 @@
 
 Personal technical blog focused on networking, systems engineering,, security and hands-on technology experiments.
 
----
-
 ## Through this blog, I share:
 
 - Network engineering concepts and troubleshooting
@@ -13,12 +11,9 @@ Personal technical blog focused on networking, systems engineering,, security an
 - Programming and automation projects
 - Technical notes and lessons learned
 
----
-
 ## Built With
 
 - [Jekyll](https://jekyllrb.com/)
 - [Chirpy Theme](https://github.com/cotes2020/jekyll-theme-chirpy)
 - GitHub Pages
 - GitHub Actions CI/CD
-
