@@ -13,7 +13,7 @@ Personal technical blog focused on networking, systems engineering,, security an
 
 ## Built With
 
-- [Jekyll](https://jekyllrb.com/)
-- [Chirpy Theme](https://github.com/cotes2020/jekyll-theme-chirpy)
-- GitHub Pages
-- GitHub Actions CI/CD
+- [Jekyll](https://jekyllrb.com/).
+- [Chirpy Theme](https://github.com/cotes2020/jekyll-theme-chirpy).
+- GitHub Pages.
+- GitHub Actions CI/CD.
