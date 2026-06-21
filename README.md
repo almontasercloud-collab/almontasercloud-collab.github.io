@@ -2,9 +2,9 @@
 
 Personal technical blog focused on networking, systems engineering,, security and hands-on technology experiments.
 
-## About
+---
 
-Through this blog, I share:
+## Through this blog, I share:
 
 - Network engineering concepts and troubleshooting
 - Cisco technologies and security topics
@@ -13,6 +13,8 @@ Through this blog, I share:
 - Programming and automation projects
 - Technical notes and lessons learned
 
+---
+
 ## Built With
 
 - [Jekyll](https://jekyllrb.com/)
@@ -20,9 +22,3 @@ Through this blog, I share:
 - GitHub Pages
 - GitHub Actions CI/CD
 
-## Development
-
-Install dependencies:
-
-```bash
-bundle install
