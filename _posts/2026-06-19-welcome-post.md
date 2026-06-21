@@ -39,10 +39,10 @@ I am **Almontaser Babiker**, a Network and Systems Engineer passionate about bui
 
 My main areas of interest include:
 
-- 🌐 Network Engineering and Architecture
-- 🛡️ Security technologies and enterprise infrastructure
-- ⚙️ Automation and systems engineering
-- 🧪 Technical documentation, applied research, and experimental project development
+-  Engineering and Architecture
+-  Security technologies and enterprise infrastructure
+-  Automation and systems engineering
+-  Technical documentation, applied research, and experimental project development
 
 You can find more information about me [here](https://almontaserbabiker.com/about/)
 
