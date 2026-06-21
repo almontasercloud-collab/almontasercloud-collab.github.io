@@ -4,12 +4,12 @@ Personal technical blog focused on networking, systems engineering,, security an
 
 ## Through this blog, I share:
 
-- Network engineering concepts and troubleshooting
-- Cisco technologies and security topics
-- Infrastructure and systems administration
-- security experiments
-- Programming and automation projects
-- Technical notes and lessons learned
+- Network engineering concepts and troubleshooting.
+- Networking technologies and security topics.
+- Infrastructure and systems administration.
+- security experiments.
+- Programming and automation projects.
+- Technical notes and lessons learned.
 
 ## Built With
 
