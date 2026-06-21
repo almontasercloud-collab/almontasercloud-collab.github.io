@@ -44,7 +44,7 @@ My main areas of interest include:
 -  Automation and systems engineering
 -  Technical documentation, applied research, and experimental project development
 
-You can find more information about me [here](https://almontaserbabiker.com/about/)
+You can find more information about me [here](https://almontaserbabiker.com/about/).
 
 ## Let's Build and Learn 
 
