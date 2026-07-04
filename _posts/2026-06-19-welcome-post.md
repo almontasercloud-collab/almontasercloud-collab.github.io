@@ -24,7 +24,7 @@ Writing things down forces clarity. It helps turn experience into understandingâ
 This blog will contain:
 
 - Technical explanations, references, and deep dives into networking and security concepts
-- Real-world network troubleshooting experiences and case studies
+- Network troubleshooting experiences and case studies
 - Security solutions across multiple vendors and platforms
 - Lab environments, simulations, and practical testing scenarios
 - Project and proof-of-concept implementations
