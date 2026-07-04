@@ -40,4 +40,4 @@ You can find more information about me [here](https://almontaserbabiker.com/abou
 ## Let's Build and Learn 
 
 Thank you for visiting.
-I hope you find something useful here, and I look forward to sharing more technical content soon
+I hope you find something useful here, and I look forward to sharing more technical content soon.
