@@ -1,6 +1,6 @@
 ---
 icon: fas fa-user
-order: 5
+order: 6
 ---
 
 # Hello, I'm Almontaser Babiker.

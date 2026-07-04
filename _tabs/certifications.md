@@ -2,7 +2,7 @@
 title: Certifications
 date: 2026-06-19 12:00:00 +0300
 icon: fas fa-shield-halved
-order: 3
+order: 2
 ---
 
 ### Cisco Certified Specialist - Security Core (SCOR 350-701)
