@@ -2,7 +2,7 @@
 title: Let's Get Started !
 date: 2026-06-19 12:00:00 +0300
 categories: [Blog, Introduction]
-tags: [welcome, networking, technology]
+tags: [welcome, almontaser-babiker]
 image:
   path: /assets/img/post_covers/welcome.png
 pin: true
@@ -14,8 +14,6 @@ This blog is my technical notebook for documenting my work in **Network Engineer
 
 ## Why This Blog?
 Most technical knowledge fades when it’s only consumed and not applied.
-
-In real engineering environments, understanding comes from repetition—breaking systems, fixing them, and observing how they behave under pressure. I use this blog to structure that process.
 
 It is not a collection of tutorials or theory notes. It is a working log of experiments, troubleshooting cases, design decisions, and lessons learned across networking, security, cloud, and infrastructure systems.
 
@@ -35,14 +33,7 @@ This blog will contain:
 
 ## About Me
 
-I am **Almontaser Babiker**, a Network and Systems Engineer passionate about building, securing, and understanding modern technology environments.
-
-My main areas of interest include:
-
--  Engineering and Architecture
--  Security technologies and enterprise infrastructure
--  Automation and systems engineering
--  Technical documentation, applied research, and experimental project development
+I am **Almontaser Babiker**, a Network and Security Systems Engineer with a strong interest in designing, securing, and exploring modern technology infrastructures.
 
 You can find more information about me [here](https://almontaserbabiker.com/about/).
 
