@@ -3,47 +3,19 @@ icon: fas fa-user
 order: 5
 ---
 
+# Hello, I'm Almontaser Babiker.
+**Network Engineer** • *Doha, Qatar*
 
-Hello, I'm **Almontaser Babiker** — a Network Engineer based in Doha, Qatar.
+My journey into technology started with an obsession for how data moves. In **2022, I graduated with a Bachelor’s degree in Computer Science**, trading textbooks for live terminal screens. Since then, I have transitioned from studying foundational algorithms to engineering real-world infrastructure.
 
-I specialize in designing, deploying, troubleshooting, and securing IT networks. My interests are focused on understanding how modern networks and security systems work from the protocol level to enterprise-scale architectures.
+Today, I specialize in looking at networks from the protocol level up to enterprise-scale architectures—ensuring they aren't just connected, but rock-solid and secure.
 
-## Professional Background
+## The Journey So Far
 
-I graduated with a **Bachelor's degree in Computer Science** and currently work in the field of network engineering.
-
-My experience covers:
-
-- Enterprise networking
-- Network Security operations
-- Network monitoring and troubleshooting
-- Cisco security technologies
-- System administration
-
-
-
-
-## Projects & Research
-
-I enjoy working on technical projects involving:
-
-- Secure communication systems
-- Network architecture
-- Security engineering
-- Linux and embedded technologies
-
-
-## Technical Philosophy
-
-I believe strong engineers are built through curiosity, experimentation, and understanding the fundamentals.
-
-My approach is simple:
-
-> Learn the theory, build the lab, break the system, understand the failure, and improve.
-
-This blog is where I document my technical journey, experiments, solutions, and knowledge sharing.
-
+- **The Foundation:** Computer Science graduate (2022), grounded in systems thinking and structural logic.
+- **The Evolution:** Stepped directly into the enterprise arena, managing complex network operations, monitoring live environments, and tracking down network anomalies.
+- **The Focus:** Engineering robust security architectures, with proven specialization in modern routing, switching, and infrastructure hardening.
 ---
 
-Thank you for visiting my blog.  
-Let's learn, build, and engineer better systems 🚀
+This blog is a living archive of what I learn, break, and fix.  
+**Let's engineer better systems.**
