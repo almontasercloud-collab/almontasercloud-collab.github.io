@@ -8,7 +8,7 @@ image:
 pin: true
 ---
 
-# Welcome 👋
+# Welcome
 
 This blog is my technical notebook for documenting my work in **Network Engineering, Information Systems, and IT Security**.
 
