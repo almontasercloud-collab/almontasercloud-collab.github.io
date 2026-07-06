@@ -13,10 +13,10 @@ Today, I build and analyze networks from the protocol level up to enterprise arc
 ## The Journey So Far
 
 - **The Foundation:** Computer Science graduate (2022), grounded in mathematics, systems thinking, and structural logic.
-- **The Evolution:** Progressed through four roles across three companies, transitioning from systems operations to network engineering and managing enterprise network infrastructures.
+- **The Evolution:** Progressed through four roles across three companies, transitioning from systems operations to network engineering, managing enterprise network infrastructures, and earning industry-recognized professional [**certifications**](https://almontaserbabiker.com/certifications/) along the way.
 - **The Focus:** Designing and securing enterprise network infrastructures with a strong focus on routing, switching, and infrastructure security.
 
 ## Contact me
-Iam always open to learning, sharing knowledge, and connecting with people in the field. [Lets Connect!](https://almontaserbabiker.com/contact/)
+Iam always open to learning, sharing knowledge, and connecting with people in the field. [**Lets Connect!**](https://almontaserbabiker.com/contact/)
 
 
