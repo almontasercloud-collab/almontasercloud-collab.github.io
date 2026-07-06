@@ -1,7 +1,7 @@
 ---
 title: Let's Get Started !
 date: 2026-06-19 12:00:00 +0300
-categories: [Blog, Introduction]
+categories: [Blog, Posts]
 tags: [welcome, almontaser-babiker]
 image:
   path: /assets/img/post_covers/welcome.png
