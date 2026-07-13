@@ -48,6 +48,9 @@ This baseline topology uses the dedicated `Mgmt0` interface for the out-of-band 
 ## Phase 1: Base Nexus Switch Configuration
 ### Enabling Management & Core Features (lacp, vpc)
 
+>The complete configurations for both Nexus switches are available in the [**GitHub repository**](https://github.com/almontasercloud-collab/lab-nexus-vpc-nic-teaming).
+{: .prompt-tip }
+
 >This lab used a minimal, single-default-VLAN configuration to keep the focus entirely on the core behaviors of vPC and NIC Teaming.
 {: .prompt-warning }
 
