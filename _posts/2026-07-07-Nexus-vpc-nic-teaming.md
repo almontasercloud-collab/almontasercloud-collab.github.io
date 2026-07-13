@@ -338,7 +338,7 @@ Because the keep-alive link confirms both switches are still running, dual-activ
 
 ![CMD as Administrator](/assets/img/posts_photos/vPC/nexus_split_brain.png)
 
-## conclusion  
+## Conclusion  
 
 This lab demonstrated that integrating Windows Server NIC Teaming with Cisco Nexus vPC provides a resilient LACP-based high-availability solution. By testing link, switch, and peer-link failure scenarios, the design successfully maintained connectivity through automatic failover, synchronization, and split-brain prevention mechanisms. This architecture eliminates single points of failure at the server access layer and ensures continuous connectivity for critical infrastructure workloads.
 
