@@ -33,7 +33,7 @@ This blog will contain:
 
 ## About Me
 
-I am **Almontaser Babiker**, a Network and Security Systems Engineer with a strong interest in designing, securing, and exploring modern technology infrastructures.
+I am **Almontaser Babiker**, a Network and Security Engineer with a strong interest in designing, securing, and exploring modern technology infrastructures.
 
 You can find more information about me [here](https://almontaserbabiker.com/about/).
 
