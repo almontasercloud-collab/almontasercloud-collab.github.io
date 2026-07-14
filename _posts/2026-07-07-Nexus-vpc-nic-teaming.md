@@ -11,18 +11,20 @@ pin: false
 
 # Introduction
 
-This lab demonstrates how to deploy a resilient server connection using Cisco Nexus vPC and Windows Server NIC Teaming with LACP. The objective is to provide link and device redundancy while maintaining active-active connectivity between the server and the network. 
+High availability at the server access layer is a common enterprise requirement. This lab demonstrates how Cisco Nexus vPC and Windows Server NIC Teaming using LACP can provide active-active connectivity while eliminating single points of failure.
 
 ## Technology Overview
 ### Link Aggregation Control Protocol (LACP) in Windows Server
 
-Windows Server supports the IEEE `802.3ad` Link Aggregation Control Protocol (LACP) to dynamically establish and maintain link aggregation groups by exchanging Link Aggregation Control Protocol Data Units (LACPDUs) with connected switches. When the Teaming Mode is configured for LACP, the server and network devices continuously negotiate bundle membership and monitor link health, automatically detecting cabling issues, configuration mismatches, or failed links that static teaming cannot identify. 
+Windows Server supports IEEE 802.3ad Link Aggregation Control Protocol (LACP) through the built-in NIC Teaming feature, allowing multiple physical network adapters to operate as a single logical interface. During operation, the server exchanges Link Aggregation Control Protocol Data Units (LACPDUs) with connected switches to dynamically establish the team, verify member links, and detect failures. Unlike static link aggregation, LACP automatically validates configuration consistency and removes failed links from the bundle, improving both availability and operational reliability.
 
 ### Cisco Nexus Virtual Port Channel (vPC) Concepts
 
-Virtual Port Channel (vPC) is a Cisco NX-OS feature that enables two independent Cisco Nexus switches to appear as a single logical Link Aggregation Group (LAG) endpoint to downstream devices. While each switch maintains an independent control plane, vPC synchronizes the information required for consistent forwarding, allowing both switches to actively forward traffic simultaneously. This eliminates the need for Spanning Tree Protocol (STP) to block redundant host-facing links, maximizing available bandwidth and providing deterministic redundancy. The technology relies on two dedicated mechanisms—the vPC Peer-Link and Peer-Keepalive—to synchronize critical state information, including MAC address tables, IGMP snooping state, and LACP system information, while continuously monitoring peer health.
+Cisco Nexus Virtual Port Channel (vPC) enables two independent Nexus switches to present themselves as a single logical LACP endpoint to downstream devices. This allows a server to establish one port-channel across both switches while each Nexus maintains its own independent control plane. Both links remain active simultaneously, providing active-active forwarding, increased bandwidth utilization, and chassis-level redundancy without requiring traditional switch stacking.
 
-Architecturally, vPC is Cisco's implementation of Multi-Chassis Link Aggregation (M-LAG). Like Huawei's M-LAG and Alcatel-Lucent Enterprise's MC-LAG, it allows a downstream device to form a single LAG across two independent switches, providing active-active forwarding and chassis-level redundancy without requiring a traditional switch stack or a single shared control plane.
+The technology relies on two dedicated mechanisms. The vPC Peer-Link synchronizes forwarding state between the switches, including MAC address tables, IGMP snooping information, and LACP state, while the Peer-Keepalive link independently monitors peer availability to detect failures and prevent split-brain conditions.
+
+Architecturally, vPC is Cisco's implementation of Multi-Chassis Link Aggregation (M-LAG). Similar technologies include Huawei M-LAG and Alcatel-Lucent Enterprise MC-LAG, all of which allow a downstream device to form a single logical link aggregation group across two independent switches while maintaining active-active forwarding and chassis redundancy.
 
 ## Topology & Prerequisites
 ### Network Diagram & EVE-NG Setup
@@ -32,7 +34,7 @@ In this lab environment, EVE-NG is deployed as a virtual machine hosted on a VMw
 ![CMD as Administrator](/assets/img/posts_photos/vPC/lab_topo.png)
 
 
-This baseline topology uses the dedicated `Mgmt0` interface for the out-of-band vPC Peer-Keepalive link, ensuring that peer liveness detection remains independent of the data network. The vPC Peer-Link is formed as a three-member port channel spanning Eth1/1 through Eth1/3 on both Nexus switches, providing resilient state synchronization between the vPC peers. Downstream host connectivity is established via Eth1/4 on each switch, where the links terminate as a single active-active LACP port channel (Team-1) across the Windows Server's e0 and e1 network interfaces.
+This lab uses a dedicated `Mgmt0` interface for the out-of-band vPC Peer-Keepalive, while a three-member LACP port channel (`Eth1/1`–`Eth1/3`) forms the vPC Peer-Link between both Nexus switches. The Windows Server connects through `Eth1/4` on each switch, creating a single active-active LACP NIC team (Team-1) using its `e0` and `e1` interfaces.
 
 ### Hardware & Software Requirements
 #### Images: 
@@ -126,7 +128,7 @@ auto-recovery
 
 The vPC Peer-Link is a high-bandwidth Layer 2 trunk port channel that serves as the primary synchronization path between the two vPC peers. It synchronizes critical control-plane state, including MAC address tables and IGMP snooping information, while also forwarding specific data-plane traffic, such as traffic destined for orphan ports or during certain failure scenarios.
 
-> Configuration Note: The interface bundling and peer-link configurations must be identical on both Nexus-1 and Nexus-2. The configuration below creates the underlying LACP port-channel across interfaces Eth1/1 to Eth1/3 and binds it as the vPC peer-link backbone.
+> Configuration Note: The interface bundling and peer-link configurations must be identical on both Nexus-1 and Nexus-2. The configuration below creates the underlying LACP port-channel across interfaces `Eth1/1` to `Eth1/3` and binds it as the vPC peer-link backbone.
 
 **Peer-Link Configuration:**
 ```bash
@@ -206,7 +208,7 @@ interface ethernet1/4
   no shutdown
 ```
 
-> At this stage the host-facing member interface (Eth1/4) is currently suspended (in both nexus switches) because it has not yet received LACP PDUs from the downstream Windows Server. Consequently, the logical host port-channel (Po10) remains down, though it has successfully passed all vPC configuration consistency checks and is completely ready to forward traffic once the server-side NIC teaming active negotiation begins.
+> At this stage the host-facing member interface `Eth1/4` is currently suspended (in both nexus switches) because it has not yet received LACP PDUs from the downstream Windows Server. Consequently, the logical host port-channel `Po10` remains down, though it has successfully passed all vPC configuration consistency checks and is completely ready to forward traffic once the server-side NIC teaming active negotiation begins.
 
 **Nexus-1 Showing eth1/4 down state:**
 ``` bash
@@ -242,13 +244,13 @@ Click the underlined Enabled link next to NIC Teaming in Server Manager to open 
 
 ![CMD as Administrator](/assets/img/posts_photos/vPC/NIC_teaming_window.png)
 
-The Adapters and Interfaces section lists all available physical network adapters, which in this lab are **Ethernet** and **Ethernet 2**. The remaining sections display any existing NIC teams and their associated network interfaces.
+The Adapters and Interfaces section lists all available physical network adapters, which in this lab are **`Ethernet`** and **`Ethernet 2`**. The remaining sections display any existing NIC teams and their associated network interfaces.
 
 From the TASKS menu, select New Team... to create a new NIC team.
 
 ![CMD as Administrator](/assets/img/posts_photos/vPC/new_team.png)
 
-Create a new NIC team named **Team-1**, add both Ethernet and Ethernet 2 as member adapters, then configure the teaming mode as LACP with Dynamic load balancing, as shown below.
+Create a new NIC team named **Team-1**, add both `Ethernet` and `Ethernet 2` as member adapters, then configure the teaming mode as LACP with Dynamic load balancing, as shown below.
 
 ![CMD as Administrator](/assets/img/posts_photos/vPC/NIC_teaming_configuration.png)
 
@@ -264,7 +266,7 @@ After exchanging LACP negotiation packets with the Nexus vPC port-channel, the W
 ### Nexus Side Verification
 
 The following verification output confirms that the vPC peer-link and vPC member port-channels are successfully established and operating normally.
-The peer-link (Po1) is up, and the vPC port-channel (Po10) shows up status with successful consistency checks, indicating proper synchronization between both Nexus peers.
+The peer-link `Po1` is up, and the vPC port-channel (Po10) shows up status with successful consistency checks, indicating proper synchronization between both Nexus peers.
 
 **Nexus-1:**
 
@@ -304,7 +306,7 @@ Gateway reachability is confirmed through successful ping tests.
 ## Failure Scenario & Redundancy Testing
 ### Scenario A: Simulating a Single Link Failure (Host to NXOS-1)
 
-To simulate a single link failure, shut down interface Ethernet 1/4 on Nexus-1 and observe the traffic failover behavior.
+To simulate a single link failure, shut down interface `Ethernet 1/4` on Nexus-1 and observe the traffic failover behavior.
 
 ![CMD as Administrator](/assets/img/posts_photos/vPC/link_failure_test.png)
 
@@ -326,7 +328,7 @@ Traffic quickly recovers and stabilizes over the single active link once the Win
 
 When the primary vPC Peer-Link ruptures while the Peer-Keepalive remains up, the vPC domain invokes an active loop-prevention sequence. The operational secondary peer (**Nexus-1 in this case**) instantly disables its local host-facing vPC member ports and any vPC VLAN SVIs to isolate itself from the data plane. The vPC primary peer (**Nexus-2 in this case**) continues to forward all upstream and downstream traffic, maintaining deterministic traffic symmetry and preventing corrupted MAC address table sync across the network topology.
 
-Verify the baseline environment using show vpc brief. Both switches should display a healthy peer adjacency, an operational peer-link (Po1), and active vPC member ports (Po10) split across the primary and secondary nodes.
+Verify the baseline environment using show vpc brief. Both switches should display a healthy peer adjacency, an operational peer-link `Po1`, and active vPC member ports `Po10` split across the primary and secondary nodes.
 
 ![CMD as Administrator](/assets/img/posts_photos/vPC/before_peer_link_failure.png)
 
@@ -341,4 +343,6 @@ Because the keep-alive link confirms both switches are still running, dual-activ
 ## Conclusion  
 
 This lab demonstrated that integrating Windows Server NIC Teaming with Cisco Nexus vPC provides a resilient LACP-based high-availability solution. By testing link, switch, and peer-link failure scenarios, the design successfully maintained connectivity through automatic failover, synchronization, and split-brain prevention mechanisms. This architecture eliminates single points of failure at the server access layer and ensures continuous connectivity for critical infrastructure workloads.
+
+Although this lab uses a simplified topology, the same design principles are widely applied in production data centers to provide resilient server connectivity without relying on traditional switch stacking.
 
