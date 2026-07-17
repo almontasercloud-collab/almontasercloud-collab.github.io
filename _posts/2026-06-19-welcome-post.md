@@ -13,7 +13,7 @@ pin: true
 This blog is my technical notebook for documenting my work in **Network Engineering, Information Systems, and IT Security**.
 
 ## Why This Blog?
-Most technical knowledge fades when it’s only consumed and not applied.
+Most technical knowledge fades when it’s only consumed and not applied
 
 It is not a collection of tutorials or theory notes. It is a working log of experiments, troubleshooting cases, design decisions, and lessons learned across networking, security, cloud, and infrastructure systems.
 
