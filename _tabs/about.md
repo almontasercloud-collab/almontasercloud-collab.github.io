@@ -13,7 +13,7 @@ Today, I design, build, and support network and security infrastructure, focusin
 
 ## Experience
 
->**Network & NOC Engineer**
+>**Network Operations Center Engineer**
 Ali Bin Ali • Aug 2026 – Present • Doha, Qatar
 
 >**Network Engineer** 

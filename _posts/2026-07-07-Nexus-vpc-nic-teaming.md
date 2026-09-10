@@ -1,5 +1,5 @@
 ---
-title: LACP NIC Teaming to Cisco Nexus vPC
+title: NIC Teaming to Cisco Nexus vPC
 date: 2026-07-13 16:25:00 +0300
 categories: [Labs, Switching]
 tags: [networking, Network Engineering, Computer Networks, Switching, NXOS, Nexus, vPC]
