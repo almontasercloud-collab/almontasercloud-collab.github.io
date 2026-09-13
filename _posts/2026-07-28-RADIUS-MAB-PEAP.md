@@ -10,73 +10,51 @@ pin: false
 
 # Introduction
 
-What happens when a Windows endpoint connects to the network before anyone has logged in? And what changes when a user finally signs in?
-
-In a real enterprise environment, network access should not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity of the person using it.
+Network access should not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity of the person using it.
 
 This is where **802.1X, PEAP-MSCHAPv2, Cisco ISE, and Active Directory** come together.
 
-In this article, we will build a complete wired network authentication scenario that demonstrates how an endpoint moves through two distinct authentication phases:
+In this article, you will build a complete wired network authentication scenario that demonstrates how an endpoint moves through two distinct authentication phases:
 
 * **Machine Authentication:** The Windows endpoint authenticates using its domain computer credentials through PEAP-MSCHAPv2.
 * **User Authentication:** After a user logs in, the same endpoint authenticates using the user's Active Directory credentials through PEAP-MSCHAPv2.
 
-But authentication is only the beginning. The real question is: **What does the network do with the identity it receives?**
-
-Using Cisco ISE as the RADIUS server and Active Directory as the identity source, we will explore how authentication results are evaluated against authorization policies and translated into actual network access. Depending on the authenticated identity, Cisco ISE will dynamically assign the endpoint to a specific VLAN and apply a downloadable ACL (dACL), demonstrating how identity-based access control can change as the authentication phase changes.
+Using Cisco ISE as the RADIUS server and Active Directory as the identity source, you will explore how authentication results are evaluated against authorization policies and translated into actual network access. Depending on the authenticated identity, Cisco ISE will dynamically assign the endpoint to a specific VLAN and apply a downloadable ACL (dACL), demonstrating how identity-based access control can change as the authentication phase changes.
 
 By the end of this article, a complete setup will be built to authenticate a Windows 11 domain-joined endpoint using PEAP-MSCHAPv2 Machine Authentication, transition to PEAP-MSCHAPv2 User Authentication after interactive login, and dynamically enforce identity-based network access through Cisco ISE using VLAN assignment and downloadable ACLs.
 
-Along the way, we will examine the authentication flow, the interaction between the Windows supplicant, Cisco Catalyst switch, Cisco ISE, and Active Directory, and the authorization decisions that determine what the endpoint is allowed to access at each stage.
-
 ## Protocols... always! 
 
-Before jumping into the configuration, let's understand the protocols that make this authentication scenario work.
+Before jumping into the configuration, protocols should be treated as different components of the same authentication process. Each one has a specific responsibility, and understanding how they fit together will make the configuration much easier to follow.
 
-Rather than treating them as isolated technologies, think of them as different components of the same authentication process. Each one has a specific responsibility, and understanding how they fit together will make the configuration much easier to follow.
-
-**802.1X — The Gatekeeper**
-
-**802.1X** is the access control framework that requires an endpoint to authenticate before gaining network access.
+**802.1X:** is the access control framework that requires an endpoint to authenticate before gaining network access.
 
 It defines three roles:
 
 * **Supplicant**: The endpoint requesting network access, such as a Windows 11 machine.
-* **Authenticator**: The network device controlling access, such as a Cisco Catalyst switch.
+* **Authenticator**: The network device controlling access, such as a Cisco vSwitch.
 * **Authentication Server**: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
 
 802.1X uses EAP to carry authentication messages between the supplicant and the authentication server through the authenticator. Think of it as the gatekeeper at the entrance of the network. The endpoint requests access, the switch controls the entrance, and ISE decides whether the authentication is valid.
 
 **But how do these devices actually communicate?**
 
-The endpoint and switch exchange EAP messages using EAP over LAN (EAPoL). The switch then forwards the authentication conversation to ISE using RADIUS.
-
-This separation is important: 802.1X defines the access control framework, while EAP provides the authentication message format and RADIUS carries the authentication exchange between the switch and ISE.
-
-Simply put, 802.1X controls the door. EAP carries the authentication conversation. RADIUS connects the switch to the authentication server.
+The endpoint and switch exchange EAP messages using EAP over LAN (EAPoL). The switch then forwards the authentication conversation to ISE using RADIUS. This separation is important: 802.1X defines the access control framework, while EAP provides the authentication message format and RADIUS carries the authentication exchange between the switch and ISE.
 
 **PEAP — The Protected Tunnel**
 
 Protected Extensible Authentication Protocol (PEAP) is an EAP authentication method that establishes a TLS-protected tunnel between the supplicant and the authentication server.
 
-**Why do we need this tunnel?**
+**Why do we need this tunnel?** (AKA: Outer Method)
 
-Our scenario uses PEAP-MSCHAPv2, where the endpoint authenticates using Active Directory credentials. Those credentials must be exchanged inside a protected channel rather than being exposed directly on the network.
-
-PEAP provides that protection by establishing a TLS tunnel before the inner authentication method takes place. The important distinction is that PEAP provides the protected tunnel, while MSCHAPv2 performs the inner username/password authentication.
+Our scenario uses PEAP-MSCHAPv2, where the endpoint authenticates using Active Directory credentials. Those credentials must be exchanged inside a protected channel rather than being exposed directly on the network. PEAP provides that protection by establishing a TLS tunnel before the inner authentication method takes place. The important distinction is that PEAP provides the protected tunnel, while MSCHAPv2 performs the inner username/password authentication.
 
 The same PEAP-MSCHAPv2 method will be used for both phases of our scenario:
 
 * **Machine Authentication** — The endpoint authenticates using its domain computer credentials.
 * **User Authentication** — The endpoint authenticates using the credentials of the logged-in domain user.
 
-**MAB — The MAC-Based Alternative**
-
-MAC Authentication Bypass (MAB) is a mechanism that allows a switch to authenticate an endpoint using its MAC address instead of requiring 802.1X credentials. When an endpoint connects, the switch can take its MAC address and send it to ISE in a RADIUS authentication request.
-
-ISE then evaluates the request against its policies and returns an authorization result. MAB is useful for devices that cannot perform 802.1X authentication, such as certain printers, IP phones, or other non-supplicant devices.
-
-**RADIUS — The Communication Channel**
+**RADIUS**
 
 Remote Authentication Dial-In User Service (RADIUS) is the protocol that carries authentication, authorization, and accounting information between the network device and the authentication server.
 
@@ -84,7 +62,6 @@ In this setup:
 
 * The Cisco  vSwitch is the RADIUS client.
 * Cisco ISE is the RADIUS server.
-* Active Directory is the identity source used by ISE to validate domain credentials.
 
 The switch communicates with ISE using RADIUS over IP. ISE evaluates the authentication request and returns the result, along with additional authorization attributes when applicable. For example, ISE may return:
 
@@ -93,27 +70,17 @@ The switch communicates with ISE using RADIUS over IP. ISE evaluates the authent
 * Downloadable ACL (dACL).
 * Other authorization attributes supported by the network device.
 
-**Why do we need RADIUS?**
+**Putting It All Together:**
 
-**If EAP already provides a way to exchange authentication messages between the endpoint and the switch, why do we need another protocol like RADIUS?**
-
-A valid question.
-
-The answer is that authentication is only one part of the flow.
-
-EAP provides a framework for carrying authentication methods. In our scenario, PEAP uses EAP to establish the protected authentication exchange between the endpoint and ISE. But the switch still needs a way to communicate with the authentication server, carry the authentication request, receive the result, and apply the authorization returned by the server.
-
-RADIUS allows the switch and ISE to exchange authentication and authorization information over an IP network. Think of it this way:
-
-* **802.1X**: Controls access to the network.
+* **802.1X**: Defines and Controls secure access to the network.
 * **EAP**: Carries the authentication conversation.
 * **PEAP**: Protects the inner authentication exchange.
-* **MSCHAPv2**: Authenticates the machine or user credentials.
+* **MSCHAPv2**: Authenticates the machine or user credentials (Inner method).
 * **RADIUS**: Carries the authentication request and result between the switch and ISE.
 * **ISE**: Evaluates the request and decides what access should be granted.
-* **Active Directory**: Validates the domain identity.
+* **Active Directory**: Validates the domain identity. (Single Source of Truth)
 
-Once these pieces work together, we can move beyond simply authenticating an endpoint. We can build a network that understands who or what is connecting and applies access policies accordingly.
+Once these pieces work together, you can move beyond simply authenticating an endpoint.
 
 ## Lab Topology and Components
 
@@ -125,26 +92,21 @@ Before walking through the authentication flow, let's establish the lab environm
 
 ### Key Roles 
 
-#### Location2-EP-1 (supplicant)
-As shown in the diagram, Location2-EP-1 plays the supplicant role. The endpoint is joined to the `montaser.local` Active Directory domain, and its supplicant configuration—including the PEAP/MSCHAPv2 settings, trusted CA, and authentication mode—is pushed automatically through a Group Policy Object (GPO).
+* **Location2-EP-1:** (supplicant) As shown in the diagram, Location2-EP-1 plays the supplicant role. The endpoint is joined to the `montaser.local` Active Directory domain, and its supplicant configuration—including the PEAP/MSCHAPv2 settings, trusted CA, and authentication mode—is pushed automatically through a Group Policy Object (GPO).
  
-#### Location2_Switch (Authenticator)
-The access port `Gi0/1` connects to the endpoint, while the uplink `Gi0/0` connects to Core-Switch.
+* **Location2_Switch:** (Authenticator)
+The access port `Gi0/1` connects to the endpoint, while the uplink `Gi0/0` connects to Core-Switch. The switch runs an authentication order of dot1x mab, meaning dot1x is attempted first. It forwards RADIUS requests to ISE and applies the authorization result, including any VLAN assignment returned by ISE.
 
-The switch runs an authentication order of mab dot1x, meaning MAB is attempted first. It forwards RADIUS requests to ISE and applies the authorization result, including any VLAN assignment returned by ISE.
-
-#### Core-Switch (Transit)
+* **Core-Switch:** (Transit)
 The Core-Switch provides the Layer 3 path between the access switch and ISE. It simply routes the RADIUS traffic between them; no authentication or authorization decisions are made here.
 
-#### ISE (RADIUS / Policy)
-ISE acts as the RADIUS server and policy engine. It receives MAB requests, identifies the endpoint, and returns the initial authorization result.
+* **ISE:** (RADIUS / Policy)
+ISE acts as the RADIUS server and policy engine. It receives MAB requests, identifies the endpoint, and returns the initial authorization result. Later, when the endpoint authenticates using PEAP, ISE handles the authentication process, validates the MSCHAPv2 credentials against Active Directory, and returns the appropriate authorization result — in this case, `VLAN 20`.
 
-Later, when the endpoint authenticates using PEAP, ISE handles the authentication process, validates the MSCHAPv2 credentials against Active Directory, and returns the appropriate authorization result — in this case, `VLAN 20`.
-
-> This article assumes that Cisco ISE is already joined to the montaser.local Active Directory domain.
+> This article assumes that Cisco ISE is already joined to the `montaser.local` Active Directory domain.
 {: .prompt-warning }
 
-#### AD (Identity Store)
+* **AD:** (Identity Store)
 Active Directory stores the user accounts used to authenticate inside the PEAP tunnel. It also hosts the internal Certificate Authority (CA), which issued the EAP certificate used by ISE.
 
 ## Configure the Supplicant (Location2-EP-1)
@@ -226,6 +188,8 @@ gpupdate /force
 At this point you are ready to start configuring the Network Access Device (Location2_Switch)
 
 ## Configure the Authenticator (Location2_Switch)
+
+The configuration in this section is intentionally minimal, focusing only on the essential settings required to enable 802.1X authentication
 
 ### AAA Global Configuration:
 
@@ -336,7 +300,7 @@ The machine authentication and user authentication are separate PEAP authenticat
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/enable_MAR.png)
 
-> Note: MAR is a traditional PEAP machine-authentication mechanism. It is not EAP chaining. TEAP uses a different authentication model and should be evaluated separately.
+> Note: MAR is a traditional mechanism used to support machine authentication with PEAP. Newer outer methods, such as TEAP, were developed to reduce dependency on MAR. TEAP uses a different authentication model and will be evaluated separately in a dedicated lab.
 {: .prompt-warning }
 
 ### Create the Policy Set:
@@ -377,9 +341,9 @@ Authentication rule
 
 Configure the wired 802.1X authentication rule with the following settings:
 
-|Setting	| Value
+|**Setting**	| **Value**
 Condition |	Wired 802.1X authentication
-Allowed Protocols |	Montaser_AD_Server (Wich is an ISS that Includes lookup against Active directory)
+Allowed Protocols |	Montaser_AD_Server(ISE Identity Source Sequence that performs lookups against Active Directory)
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set2.png)
 
@@ -405,38 +369,31 @@ The switch receives the authorization attributes from ISE through RADIUS and app
 
 ### PreUserAuth_Access Authorization Profile:
 
-The `PreUserAuth_Access` authorization profile is intended for the initial access state before the endpoint completes user authentication.
-
-In this lab, the endpoint first connects using PEAP. ISE identifies the endpoint using its `host/endpointname$` username format and returns the initial authorization result.
-
-The purpose of this profile is to provide the endpoint with the access required during the pre-user-authentication stage, while preventing it from receiving the same access level as a fully authenticated user.
-
-Depending on the intended lab design, this profile can be used to assign a restricted VLAN or apply a downloadable ACL (dACL) that limits the traffic allowed before user authentication.
-
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/PreUserAuth_Access.png)
-
 **Permit_AD_service dACL:**
 
-The dACL should permit only the required traffic to the appropriate infrastructure servers, rather than allowing unrestricted network access.
+First, create a dACL that permits only the traffic required to reach the appropriate infrastructure services, rather than allowing unrestricted network access.
 
-For this lab, the required services may include:
-
-DNS resolution.
-DHCP, if the endpoint requires an IP address.
+For this lab, the required services may include DNS and DHCP.
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Permit_AD_Service_dACL.png)
 
+
+Save it, Then the `PreUserAuth_Access` authorization profile for the initial access state before the endpoint completes user authentication. Its purpose is to provide the endpoint with the minimum access required during this stage while preventing it from receiving the same level of access granted to a fully authenticated user. For this lab, the profile returns the Permit_AD_service downloadable ACL (dACL) defined in the previous step.
+
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/PreUserAuth_Access.png)
+
 ### Permit_Internal_Access Authorization Profile:
 
-After succesful user and machine authentication you can permit a specific users group to accesss a specific subnet to test authoirization functionallity, in this lab users in `Corporate Users` AD Group will be permitied to only communicate with hosts in `172.16.2.0/24` subnet.
+After successful user and machine authentication, you can further test authorization by allowing a specific AD user group to access only a specific subnet. In this lab, users who are members of the `Corporate Users` AD group will be permitted to communicate only with hosts in the `172.16.2.0/24` subnet.
+
+First, create create the **Internal Only** dACL which restrict the communication to `172.16.2.0/24` network resources.
+
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Internal_Only_dACL.png)
+
+Then, create the **Permit_Internal_Access** authorization profile and configure it to return the **Internal_Only** dACL.
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Permit_Internal_Access.png)
 
-**Internal Only dACL:**
-
-The Internal Only downloadable ACL is retured to restrict the communication to `172.16.2.0/24` network resources.
-
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Internal_Only_dACL.png)
 
 ### Configure Authorization policy:
 
