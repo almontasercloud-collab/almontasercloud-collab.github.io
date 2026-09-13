@@ -99,7 +99,7 @@ The switch communicates with ISE using RADIUS over IP. ISE evaluates the authent
 
 A valid question.
 
-The answer is that authentication is only part of the flow.
+The answer is that authentication is only one part of the flow.
 
 EAP provides a framework for carrying authentication methods. In our scenario, PEAP uses EAP to establish the protected authentication exchange between the endpoint and ISE. But the switch still needs a way to communicate with the authentication server, carry the authentication request, receive the result, and apply the authorization returned by the server.
 
@@ -126,7 +126,7 @@ Before walking through the authentication flow, let's establish the lab environm
 ### Key Roles 
 
 #### Location2-EP-1 (supplicant)
-As shown in the diagram, Location2-EP-1 plays the supplicant role. The endpoint is joined to the `montaser.local` Active Directory domain, and its supplicant configuration — including the PEAP/MSCHAPv2 settings, trusted CA, and authentication mode — is pushed automatically through a Group Policy Object (GPO).
+As shown in the diagram, Location2-EP-1 plays the supplicant role. The endpoint is joined to the `montaser.local` Active Directory domain, and its supplicant configuration—including the PEAP/MSCHAPv2 settings, trusted CA, and authentication mode—is pushed automatically through a Group Policy Object (GPO).
  
 #### Location2_Switch (Authenticator)
 The access port `Gi0/1` connects to the endpoint, while the uplink `Gi0/0` connects to Core-Switch.
