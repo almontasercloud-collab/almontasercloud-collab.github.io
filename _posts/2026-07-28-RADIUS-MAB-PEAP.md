@@ -29,9 +29,6 @@ By the end of this article, a complete setup will be built to authenticate a Win
 
 Along the way, we will examine the authentication flow, the interaction between the Windows supplicant, Cisco Catalyst switch, Cisco ISE, and Active Directory, and the authorization decisions that determine what the endpoint is allowed to access at each stage.
 
-**The objective is not simply to make 802.1X work. It is to understand what happens at every stage—and why.**
-
-
 ## Protocols... always! 
 
 Before jumping into the configuration, let's understand the protocols that make this authentication scenario work.
@@ -70,11 +67,8 @@ PEAP provides that protection by establishing a TLS tunnel before the inner auth
 
 The same PEAP-MSCHAPv2 method will be used for both phases of our scenario:
 
-**Machine Authentication** — The endpoint authenticates using its domain computer credentials.
-
-**User Authentication** — The endpoint authenticates using the credentials of the logged-in domain user.
-
-Same authentication method. Different identity.
+* **Machine Authentication** — The endpoint authenticates using its domain computer credentials.
+* **User Authentication** — The endpoint authenticates using the credentials of the logged-in domain user.
 
 **MAB — The MAC-Based Alternative**
 
@@ -86,13 +80,11 @@ ISE then evaluates the request against its policies and returns an authorization
 
 Remote Authentication Dial-In User Service (RADIUS) is the protocol that carries authentication, authorization, and accounting information between the network device and the authentication server.
 
-In our setup:
+In this setup:
 
-The Cisco  vSwitch is the RADIUS client.
-
-Cisco ISE is the RADIUS server.
-
-Active Directory is the identity source used by ISE to validate domain credentials.
+* The Cisco  vSwitch is the RADIUS client.
+* Cisco ISE is the RADIUS server.
+* Active Directory is the identity source used by ISE to validate domain credentials.
 
 The switch communicates with ISE using RADIUS over IP. ISE evaluates the authentication request and returns the result, along with additional authorization attributes when applicable. For example, ISE may return:
 
@@ -107,7 +99,7 @@ The switch communicates with ISE using RADIUS over IP. ISE evaluates the authent
 
 A valid question.
 
-The answer is that authentication is only part of the story.
+The answer is that authentication is only part of the flow.
 
 EAP provides a framework for carrying authentication methods. In our scenario, PEAP uses EAP to establish the protected authentication exchange between the endpoint and ISE. But the switch still needs a way to communicate with the authentication server, carry the authentication request, receive the result, and apply the authorization returned by the server.
 
