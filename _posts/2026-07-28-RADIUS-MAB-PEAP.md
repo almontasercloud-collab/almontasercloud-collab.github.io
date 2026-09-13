@@ -293,9 +293,7 @@ Click **Add** and enter the device details.
 
 ### Configure the device parameters:
 
-### Device parameters
-
-Configure the following:
+Configure the following device parameters:
 
 * **Name:** Location2_Switch
 * **IP Address:** The IP address used by the switch to communicate with ISE.
@@ -306,29 +304,21 @@ Configure the following:
 
 ### Configure RADIUS parameters:
 
-### RADIUS parameters
-
 Enable RADIUS authentication and configure the shared secret.
 
-The shared secret must match the key configured on the switch under the RADIUS server definition.
-
-In this lab, the switch uses ISE as its RADIUS server for authentication, authorization, and accounting.
+The shared secret must match the key configured on the switch under the RADIUS server definition. In this lab, the switch uses ISE as its RADIUS server for authentication, authorization, and accounting.
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/ISE_NAD3.png)
 
 ### Integrate with AD and Enable MAR
 
-Cisco ISE uses Active Directory as the identity source for validating the credentials submitted by the Windows supplicant.
-
-In this lab, ISE is joined to the `montaser.local` Active Directory domain. This allows ISE to authenticate domain users and computer accounts through the configured AD integration.
+Cisco ISE uses Active Directory as the identity source for validating the credentials submitted by the Windows supplicant. In this lab, ISE is joined to the `montaser.local` Active Directory domain. This allows ISE to authenticate domain users and computer accounts through the configured AD integration.
 
 Navigate to:`Administration > Identity Management > External Identity Sources > Active Directory`
 
 **Join ISE to the domain:**
 
-If ISE is not already joined to the domain, configure the Active Directory join point using the domain name and an account with sufficient permissions to join the ISE node to the domain.
-
-After joining the domain, verify that the connection is successful.
+If ISE is not already joined to the domain, configure the Active Directory join point using the domain name and an account with sufficient permissions to join the ISE node to the domain After joining the domain, verify that the connection is successful.
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/AD_Ext_Src.png)
 
@@ -347,7 +337,6 @@ The machine authentication and user authentication are separate PEAP authenticat
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/enable_MAR.png)
 
 > Note: MAR is a traditional PEAP machine-authentication mechanism. It is not EAP chaining. TEAP uses a different authentication model and should be evaluated separately.
-pro
 {: .prompt-warning }
 
 ### Create the Policy Set:
