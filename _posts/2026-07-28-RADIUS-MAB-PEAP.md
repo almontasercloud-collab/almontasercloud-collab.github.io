@@ -1,5 +1,5 @@
 ---
-title: Dot1x-PEAP Machine and User AAA
+title: PEAP & MSCHAPv2 — Machine and User AAA
 date: 2026-07-28 16:25:00 +0300
 categories: [Labs, Cisco ISE]
 tags: [networking, Network Engineering, 802.1x, MAB, security, cisco ISE, MSCHAPv2, EAP,  Network Access Control, AAA, Network Access Control]
