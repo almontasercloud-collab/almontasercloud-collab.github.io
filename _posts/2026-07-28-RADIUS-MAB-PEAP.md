@@ -268,7 +268,7 @@ Description ### Location2-EP-1 ###
  switchport mode access
  negotiation auto
  authentication event fail action next-method
- authentication order mab dot1x
+ authentication order dot1x mab
  authentication priority dot1x mab
  authentication port-control auto
  authentication periodic
