@@ -10,9 +10,10 @@ pin: false
 
 # Introduction
 
-This post defines a set of network authentication protocols and demonstrates a scenario where an endpoint initially connects using MAC Authentication Bypass (MAB) and is later authenticated using PEAP with MSCHAPv2.
+This article defines a set of network authentication protocols and demonstrates a scenario where an endpoint initially connects using PEAP-MSCHAPv2 Machine Authentication and is later authenticated using PEAP-MSCHAPv2 User Authentication.
 
-The setup uses Cisco ISE as the RADIUS server, Active Directory for user authentication, and dynamic VLAN assignment based on the authorization result. The goal is to understand how these authentication methods work together and how the network handles an endpoint as it moves from MAB to user-based authentication.
+The setup uses Cisco ISE as the RADIUS server, Active Directory for user and computer authentication, and dynamic VLAN and dACL assignment based on the authorization result. The goal is to understand how these authentication phases work together sequentially and how the network handles an endpoint as it moves from machine-based authentication to user-based authentication.
+
 
 
 ## Protocols... always! 
@@ -384,7 +385,7 @@ Results: `Location2_Vlan_Assign`, `PreUserAuth_Access`
 
 Explanation: Matches a domain-joined computer at boot-up or the Windows lock screen. It validates the machine account against Active Directory and populates Cisco ISE's internal cache for that MAC address.
 
-**802.1x_User_Authr_1:**
+**802.1x_User_Authz_1:**
 
 Conditions: `Wired_802.1X` AND `ExternalGroups EQUALS .../Network Administrators AND WasMachineAuthenticated EQUALS True`
 
@@ -392,7 +393,7 @@ Results: `Location2_Vlan_Assign`, `PermitAccess`
 
 Explanation: Grants elevated network access to network administrators (Full Access), provided they log in from a corporate-managed machine that has successfully passed the machine phase.
 
-**802.1x_User_Authr_2:**
+**802.1x_User_Authz_2:**
 
 Conditions: `Wired_802.1X` AND `ExternalGroups EQUALS .../ISE-CORP-USERS AND WasMachineAuthenticated EQUALS True`
 
