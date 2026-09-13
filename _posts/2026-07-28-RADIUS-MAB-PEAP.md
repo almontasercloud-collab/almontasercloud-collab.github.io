@@ -10,10 +10,28 @@ pin: false
 
 # Introduction
 
-This article defines a set of network authentication protocols and demonstrates a scenario where an endpoint initially connects using PEAP-MSCHAPv2 Machine Authentication and is later authenticated using PEAP-MSCHAPv2 User Authentication.
+# Introduction
 
-The setup uses Cisco ISE as the RADIUS server, Active Directory for user and computer authentication, and dynamic VLAN and dACL assignment based on the authorization result. The goal is to understand how these authentication phases work together sequentially and how the network handles an endpoint as it moves from machine-based authentication to user-based authentication.
+What happens when a Windows endpoint connects to the network before anyone has logged in? And what changes when a user finally signs in?
 
+In a real enterprise environment, network access should not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity of the person using it.
+
+This is where **802.1X, PEAP-MSCHAPv2, Cisco ISE, and Active Directory** come together.
+
+In this article, we will build a complete wired network authentication scenario that demonstrates how an endpoint moves through two distinct authentication phases:
+
+* **Machine Authentication:** The Windows endpoint authenticates using its domain computer credentials through PEAP-MSCHAPv2.
+* **User Authentication:** After a user logs in, the same endpoint authenticates using the user's Active Directory credentials through PEAP-MSCHAPv2.
+
+But authentication is only the beginning. The real question is: **What does the network do with the identity it receives?**
+
+Using Cisco ISE as the RADIUS server and Active Directory as the identity source, we will explore how authentication results are evaluated against authorization policies and translated into actual network access. Depending on the authenticated identity, Cisco ISE will dynamically assign the endpoint to a specific VLAN and apply a downloadable ACL (dACL), demonstrating how identity-based access control can change as the authentication phase changes.
+
+By the end of this article, a complete setup will be built to authenticate a Windows 11 domain-joined endpoint using PEAP-MSCHAPv2 Machine Authentication, transition to PEAP-MSCHAPv2 User Authentication after interactive login, and dynamically enforce identity-based network access through Cisco ISE using VLAN assignment and downloadable ACLs.
+
+Along the way, we will examine the authentication flow, the interaction between the Windows supplicant, Cisco Catalyst switch, Cisco ISE, and Active Directory, and the authorization decisions that determine what the endpoint is allowed to access at each stage.
+
+**The objective is not simply to make 802.1X work. It is to understand what happens at every stage—and why.**
 
 
 ## Protocols... always! 
