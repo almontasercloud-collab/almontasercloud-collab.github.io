@@ -379,7 +379,7 @@ Configure the wired 802.1X authentication rule with the following settings:
 
 |Setting	| Value
 Condition |	Wired 802.1X authentication
-Allowed Protocols |	Montaser_AD_Server (Wich is an ISS that performs lookup against Active directory)
+Allowed Protocols |	Montaser_AD_Server (Wich is an ISS that Includes lookup against Active directory)
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set2.png)
 
@@ -470,6 +470,78 @@ Explanation: Grants general internal network access to standard corporate users 
 
 At this stage AAA configuration for Location2 wired Devices is completed, tests and verifications can be made to confirm the intended behaviour.
 ## Testing AAA
+
+To evaluate the configuration, you can now power on Location2-EP-1 and log in using corpuser, which belongs to the Corporate Users group, or netadmin, which belongs to the Network Administrators group. After logging in, test connectivity to different networks and verify that each user receives the expected access based on their group membership. While testing, keep an eye on the RADIUS Live Logs in ISE. This should be the first place you check whenever you test a new policy or troubleshoot an authentication or authorization issue.
+
+When Windows boots and reaches the login screen, its native supplicant immediately triggers a machine authentication attempt.
+
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/supplicant_boot.png)
+
+The machine authenticates successfully using its Active Directory computer account credentials. ISE returns the `Permit_AD_Service` dACL in the authorization result, and the NAD sends a `session-start` accounting request. Once the user provides their credentials, a second authentication attempt is triggered for the user.
+
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/user_login.png)
+
+The user authenticates successfully using their AD credentials. This time, ISE returns the `Internal_Only` dACL in the authorization result, and the NAD sends a `session-start` accounting request for the user session.
+
+Let's take a look at the Authentication report provided by ISE.
+
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/report1.png)
+
+As you can see, the request matched the `Location2_Wired` Policy Set and the `802.1x_User_Authz_2` Authorization policy, which returned the `Internal_Only` dACL as the authorization result.
+
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/MAR_IN_ACT.png)
+
+Step 24422, **"ISE has confirmed previous successful machine authentication for user in Active Directory"**, is the result of enabling `MAR` (Machine Access Restriction).
+
+Without `MAR`, this step will fail, along with the user authentication attempt, because ISE cannot verify that the user authentication is associated with a previously successful machine authentication.
+
+* Cisco vSwitch (NAD) applying `Internal_Only` dACL for `corpuser`:
+
+```bash
+
+Location-2-ACC-Switch# show auth sessions interface g 0/1 de
+            Interface:  GigabitEthernet0/1
+          MAC Address:  5000.0008.0000
+         IPv6 Address:  Unknown
+         IPv4 Address:  10.1.2.21
+            User-Name:  MONTASER\corpuser
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  single-host
+     Oper control dir:  both
+      Session timeout:  3600s (local), Remaining: 3542s
+       Timeout action:  Reauthenticate
+      Restart timeout:  N/A
+Periodic Acct timeout:  N/A
+       Session Uptime:  3077s
+    Common Session ID:  0A0164030000001807333237
+      Acct Session ID:  0x0000002F
+               Handle:  0x0D000009
+       Current Policy:  POLICY_Gi0/1
+
+Local Policies:
+        Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
+      Security Policy:  Should Secure
+      Security Status:  Link Unsecure
+
+
+Server Policies:
+           Vlan Group:  Vlan: 20
+              ACS ACL:  xACSACLx-IP-Internal_Only-6a95ad87
+
+Method status list:
+      Method            State
+
+      dot1x              Authc Success
+      mab                Stopped
+
+```
+
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Corpuser_Access.png)
+
+* Applying `Permit Access` (Full Access) for `netadmin` user:
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Netadmin_Access.png)
+
 ## Conclusion
 Implementing sequential machine-and-user authorization rules provides a highly secure approach to endpoint control without the administrative overhead of Machine Access Restrictions (MAR). By leveraging the native Network Access:WasMachineAuthenticated attribute, Cisco ISE effectively creates a dual-factor validation requirement: a user must not only possess valid corporate credentials but must also operate from a managed, Active Directory-joined asset.
 
