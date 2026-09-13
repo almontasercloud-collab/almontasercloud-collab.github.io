@@ -10,8 +10,6 @@ pin: false
 
 # Introduction
 
-# Introduction
-
 What happens when a Windows endpoint connects to the network before anyone has logged in? And what changes when a user finally signs in?
 
 In a real enterprise environment, network access should not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity of the person using it.
@@ -36,25 +34,99 @@ Along the way, we will examine the authentication flow, the interaction between 
 
 ## Protocols... always! 
 
-**802.1X:** The framework that controls network access by requiring an endpoint to authenticate before gaining access to the network. It defines the roles of the supplicant (endpoint), authenticator (switch), and authentication server (ISE), and uses EAP to carry authentication messages between them.
-Think of it as the access control mechanism that decides when an endpoint is allowed onto the network. The switch communicates with ISE through RADIUS, while the endpoint and switch exchange EAP messages over EAPoL.
+Before jumping into the configuration, let's understand the protocols that make this authentication scenario work.
 
-Simply put, 802.1X is the gatekeeper that makes sure an endpoint authenticates before getting network access.
+Rather than treating them as isolated technologies, think of them as different components of the same authentication process. Each one has a specific responsibility, and understanding how they fit together will make the configuration much easier to follow.
 
-**PEAP (Protected Extensible Authentication Protocol):** PEAP is an EAP authentication method that establishes a protected TLS tunnel between the supplicant and the authentication server. The tunnel protects the inner authentication exchange from being exposed on the network.
+**802.1X — The Gatekeeper**
 
-**MAB:** The mechanism that lets a switch authenticate an endpoint using its MAC address instead of a username or certificate. The switch takes the MAC address, sends it to RADIUS, and asks ISE whether the endpoint is allowed on the network.
+**802.1X** is the access control framework that requires an endpoint to authenticate before gaining network access.
 
+It defines three roles:
 
-**RADIUS:** The protocol that carries authentication and authorization requests between the switch and ISE. It’s the conversation channel: the switch asks ISE, “Can this endpoint get in?” and ISE answers with a yes/no, plus any additional attributes such as VLAN assignment. RADIUS provides the IP-based communication channel between the switch and ISE, allowing the network to exchange authentication, authorization, and accounting information beyond the original EAP conversation.
+Supplicant: The endpoint requesting network access, such as a Windows 11 machine.
 
-Why do we need RADIUS? Why not just exchange EAP messages directly? A valid question to ask yourself. If EAP already provides a way to exchange authentication messages between the endpoint and the switch, why do we need another protocol like RADIUS?
-
-The answer is that authentication is only part of the story. We also need a way to carry additional context, make authorization decisions, and communicate the final result back to the network device.
-
-And this is where RADIUS comes in.
+Authenticator: The network device controlling access, such as a Cisco Catalyst switch.
 
 
+Authentication Server: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
+
+802.1X uses EAP to carry authentication messages between the supplicant and the authentication server through the authenticator.
+
+Think of it as the gatekeeper at the entrance of the network. The endpoint requests access, the switch controls the entrance, and ISE decides whether the authentication is valid.
+
+**But how do these devices actually communicate?**
+
+The endpoint and switch exchange EAP messages using EAP over LAN (EAPoL). The switch then forwards the authentication conversation to ISE using RADIUS.
+
+This separation is important: 802.1X defines the access control framework, while EAP provides the authentication message format and RADIUS carries the authentication exchange between the switch and ISE.
+
+Simply put, 802.1X controls the door. EAP carries the authentication conversation. RADIUS connects the switch to the authentication server.
+
+**PEAP — The Protected Tunnel**
+
+Protected Extensible Authentication Protocol (PEAP) is an EAP authentication method that establishes a TLS-protected tunnel between the supplicant and the authentication server.
+
+**Why do we need this tunnel?**
+
+Our scenario uses PEAP-MSCHAPv2, where the endpoint authenticates using Active Directory credentials. Those credentials must be exchanged inside a protected channel rather than being exposed directly on the network.
+
+PEAP provides that protection by establishing a TLS tunnel before the inner authentication method takes place. The important distinction is that PEAP provides the protected tunnel, while MSCHAPv2 performs the inner username/password authentication.
+
+The same PEAP-MSCHAPv2 method will be used for both phases of our scenario:
+
+**Machine Authentication** — The endpoint authenticates using its domain computer credentials.
+
+**User Authentication** — The endpoint authenticates using the credentials of the logged-in domain user.
+
+Same authentication method. Different identity.
+
+**MAB — The MAC-Based Alternative**
+
+MAC Authentication Bypass (MAB) is a mechanism that allows a switch to authenticate an endpoint using its MAC address instead of requiring 802.1X credentials. When an endpoint connects, the switch can take its MAC address and send it to ISE in a RADIUS authentication request.
+
+ISE then evaluates the request against its policies and returns an authorization result. MAB is useful for devices that cannot perform 802.1X authentication, such as certain printers, IP phones, or other non-supplicant devices.
+
+**RADIUS — The Communication Channel**
+
+Remote Authentication Dial-In User Service (RADIUS) is the protocol that carries authentication, authorization, and accounting information between the network device and the authentication server.
+
+In our setup:
+
+The Cisco  vSwitch is the RADIUS client.
+
+Cisco ISE is the RADIUS server.
+
+Active Directory is the identity source used by ISE to validate domain credentials.
+
+The switch communicates with ISE using RADIUS over IP. ISE evaluates the authentication request and returns the result, along with additional authorization attributes when applicable. For example, ISE may return:
+
+* Access-Accept or Access-Reject.
+* VLAN assignment.
+* Downloadable ACL (dACL).
+* Other authorization attributes supported by the network device.
+
+**Why do we need RADIUS?**
+
+**If EAP already provides a way to exchange authentication messages between the endpoint and the switch, why do we need another protocol like RADIUS?**
+
+A valid question.
+
+The answer is that authentication is only part of the story.
+
+EAP provides a framework for carrying authentication methods. In our scenario, PEAP uses EAP to establish the protected authentication exchange between the endpoint and ISE. But the switch still needs a way to communicate with the authentication server, carry the authentication request, receive the result, and apply the authorization returned by the server.
+
+RADIUS allows the switch and ISE to exchange authentication and authorization information over an IP network. Think of it this way:
+
+* **802.1X**: Controls access to the network.
+* **EAP**: Carries the authentication conversation.
+* **PEAP**: Protects the inner authentication exchange.
+* **MSCHAPv2**: Authenticates the machine or user credentials.
+* **RADIUS**: Carries the authentication request and result between the switch and ISE.
+* **ISE**: Evaluates the request and decides what access should be granted.
+* **Active Directory**: Validates the domain identity.
+
+Once these pieces work together, we can move beyond simply authenticating an endpoint. We can build a network that understands who or what is connecting and applies access policies accordingly.
 
 ## Lab Topology and Components
 
