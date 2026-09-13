@@ -141,15 +141,15 @@ ISE acts as the RADIUS server and policy engine. It receives MAB requests, ident
 
 Later, when the endpoint authenticates using PEAP, ISE handles the authentication process, validates the MSCHAPv2 credentials against Active Directory, and returns the appropriate authorization result — in this case, `VLAN 20`.
 
-> This article assums that ISE is already joined to the `montaser.local` domain.
-{: .prompt-tip }
+> This article assumes that Cisco ISE is already joined to the montaser.local Active Directory domain.
+{: .prompt-warning }
 
 #### AD (Identity Store)
 Active Directory stores the user accounts used to authenticate inside the PEAP tunnel. It also hosts the internal Certificate Authority (CA), which issued the EAP certificate used by ISE.
 
 ## Configure the Supplicant (Location2-EP-1)
 
-So basically, Location2-EP-1 is a Windows 11 workstation joined to the montaser.local Active Directory domain.
+Basically, Location2-EP-1 is a Windows 11 workstation joined to the montaser.local Active Directory domain.
 
 For convenience, you can push the supplicant service and network profile configuration from the domain controller using a Group Policy Object (GPO). This keeps the lab close to how things are handled in real deployments, where you might have tens or hundreds of workstations to configure.
 
@@ -219,7 +219,7 @@ gpupdate /force
 ```
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/update_success.png)
 
-12- Verify Location2-EP-1 802.1x is enabled and configured according to The GPO defined earlier:
+12- Verify Location2-EP-1 802.1x supplicant is enabled and configured according to The GPO defined earlier:
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/verify_supplicant.png)
 
