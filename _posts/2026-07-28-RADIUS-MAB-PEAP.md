@@ -141,7 +141,8 @@ ISE acts as the RADIUS server and policy engine. It receives MAB requests, ident
 
 Later, when the endpoint authenticates using PEAP, ISE handles the authentication process, validates the MSCHAPv2 credentials against Active Directory, and returns the appropriate authorization result — in this case, `VLAN 20`.
 
-ISE is joined to the `montaser.local` domain.
+> This article assums that ISE is already joined to the `montaser.local` domain.
+{: .prompt-tip }
 
 #### AD (Identity Store)
 Active Directory stores the user accounts used to authenticate inside the PEAP tunnel. It also hosts the internal Certificate Authority (CA), which issued the EAP certificate used by ISE.
