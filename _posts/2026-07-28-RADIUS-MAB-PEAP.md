@@ -44,16 +44,13 @@ Rather than treating them as isolated technologies, think of them as different c
 
 It defines three roles:
 
-Supplicant: The endpoint requesting network access, such as a Windows 11 machine.
+**Supplicant**: The endpoint requesting network access, such as a Windows 11 machine.
 
-Authenticator: The network device controlling access, such as a Cisco Catalyst switch.
+**Authenticator**: The network device controlling access, such as a Cisco Catalyst switch.
 
+**Authentication Server**: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
 
-Authentication Server: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
-
-802.1X uses EAP to carry authentication messages between the supplicant and the authentication server through the authenticator.
-
-Think of it as the gatekeeper at the entrance of the network. The endpoint requests access, the switch controls the entrance, and ISE decides whether the authentication is valid.
+802.1X uses EAP to carry authentication messages between the supplicant and the authentication server through the authenticator. Think of it as the gatekeeper at the entrance of the network. The endpoint requests access, the switch controls the entrance, and ISE decides whether the authentication is valid.
 
 **But how do these devices actually communicate?**
 
