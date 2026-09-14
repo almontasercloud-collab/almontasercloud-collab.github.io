@@ -130,6 +130,8 @@ Computer name , Domain, and workgroup settings section confirms that Location2-E
 
 The main purpose of this section is to automatically enable 802.1X and configure the supplicant on domain-joined endpoints, including configuring the endpoint to trust the root CA that issued the ISE server certificate used to establish the PEAP TLS tunnel.
 
+Perform the following steps on your existing domain controller:
+
 1- Run `dsa.msc` to open Active Directory Users and Computers.
 
 2- Create a new Organizational Unit (Optional) name it `Location_2_Wired_Workstations`
@@ -203,7 +205,7 @@ aaa group server radius ISE-SG
 
 radius server ise.montaser.local
  address ipv4 172.16.2.101 auth-port 1812 acct-port 1813
- key Flora@123
+ key *****
 
 aaa server radius dynamic-author
  client 172.16.2.101 server-key *****
@@ -277,7 +279,7 @@ Navigate to:`Administration > Identity Management > External Identity Sources > 
 
 **Join ISE to the domain:**
 
-If ISE is not already joined to the domain, configure the Active Directory join point using the domain name and an account with sufficient permissions to join the ISE node to the domain After joining the domain, verify that the connection is successful.
+If ISE is not already joined to the domain, configure the Active Directory join point using the domain name and an account with sufficient permissions to join the ISE node to the domain. After joining the domain, verify that the connection is successful, then retrieve the required AD groups. In this lab, the `Network Administrators` and `Corporate Users` groups are imported into ISE.
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/AD_Ext_Src.png)
 
@@ -287,9 +289,7 @@ If ISE is not already joined to the domain, configure the Active Directory join 
 
 Enable the machine authentication and MAR options under the Active Directory join-point Advanced configuration.
 
-The purpose of MAR is to allow ISE to determine whether a machine has previously authenticated successfully before authorizing a subsequent user authentication.
-
-This is important when the requirement is that a user must not receive normal network access unless the endpoint has already authenticated using its machine account.
+The purpose of MAR is to allow ISE to determine whether a machine has previously authenticated successfully before authorizing a subsequent user authentication. This is important when the requirement is that a user must not receive normal network access unless the endpoint has already authenticated using its machine account.
 
 The machine authentication and user authentication are separate PEAP authentication sessions. MAR allows ISE to correlate the machine authentication with the later user authentication for authorization purposes.
 
@@ -308,14 +308,14 @@ Navigate to:
 
 Create a new policy set for the Location2 wired authentication scenario.
 
-Policy Set configuration
+Policy Set configuration:
 
-Name:`Location2_Wired`
+* Name:`Location2_Wired`
+* Condition: For example, the policy set can match the network device group containing device type `Wired Devices` and Device location `Locaction2`.
+* Allowed protocols: The built-in `Default Network Access` protocol list is sufficient for this lab, as it already allows the required PEAP and MSCHAPv2 authentication methods.
 
-Condition:
-For example, the policy set can match the network device group containing device type `Wired Devices` and Device location `Locaction2`.
-
-The policy set should be placed above the default policy set so that the requests from this lab are processed by the intended authentication and authorization rules.
+>The policy set should be placed above the default policy set so that the requests from this lab are processed by the intended authentication and authorization rules.
+{: .prompt-tip }
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set1.png)
 
@@ -323,22 +323,13 @@ After creating the policy set, open it to configure the Authentication Policy an
 
 ### Configure Authentication policy:
 
-The Authentication Policy determines how ISE validates the credentials submitted by the endpoint.
-
-For this lab, the authentication method is PEAP with EAP-MSCHAPv2, and Active Directory is used as the identity source.
-
-Create or select an Allowed Protocols profile that permits:
-
-- PEAP
-- EAP-MSCHAPv2 as the inner authentication method
-
-Authentication rule
+The Authentication Policy determines how ISE validates the credentials submitted by the endpoint. For this lab, the authentication method is wired 802.1x, and Active Directory is used as the identity source.
 
 Configure the wired 802.1X authentication rule with the following settings:
 
-|**Setting**	| **Value**
-Condition |	Wired 802.1X authentication
-Allowed Protocols |	Montaser_AD_Server(ISE Identity Source Sequence that performs lookups against Active Directory)
+
+* **Condition**: Wired 802.1X authentication
+* **Allowed Protocols**: (ISE Identity Source Sequence that performs lookups against Active Directory)
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set2.png)
 
@@ -350,15 +341,9 @@ The Location2_Vlan_Assign authorization profile is used to assign the endpoint t
 
 Navigate to: `Policy > Policy Elements > Results > Authorization > Authorization Profiles`
 
-Create or select the authorization profile used by the Location2 wired authentication policy.
-
-VLAN assignment
-
-Configure the VLAN assignment attributes required by the switch.
+Create or select the authorization profile used by the Location2 wired authentication policy and Configure the VLAN assignment attributes required by the switch.
 
 For this lab, the successful PEAP authentication result assigns the endpoint to `VLAN 20`.
-
-The switch receives the authorization attributes from ISE through RADIUS and applies the VLAN assignment to the authenticated session.
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Location2_vlan_assign.png)
 
