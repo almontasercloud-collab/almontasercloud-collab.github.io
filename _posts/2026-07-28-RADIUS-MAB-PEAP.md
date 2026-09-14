@@ -10,7 +10,7 @@ pin: false
 
 # Introduction
 
-Network access should not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity of the person using it.
+Network access does not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity of the person using it.
 
 This is where **802.1X, PEAP-MSCHAPv2, Cisco ISE, and Active Directory** come together.
 
@@ -19,23 +19,23 @@ In this article, you will build a complete wired network authentication scenario
 * **Machine Authentication:** The Windows endpoint authenticates using its domain computer credentials through PEAP-MSCHAPv2.
 * **User Authentication:** After a user logs in, the same endpoint authenticates using the user's Active Directory credentials through PEAP-MSCHAPv2.
 
-Using Cisco ISE as the RADIUS server and Active Directory as the identity source, you will explore how authentication results are evaluated against authorization policies and translated into actual network access. Depending on the authenticated identity, Cisco ISE will dynamically assign the endpoint to a specific VLAN and apply a downloadable ACL (dACL), demonstrating how identity-based access control can change as the authentication phase changes.
+Using Cisco ISE as the RADIUS server and Active Directory as the identity source, you will explore how authentication results are evaluated against authorization policies and translated into actual network access. Depending on the authenticated identity, Cisco ISE will dynamically assign the endpoint to a specific VLAN and apply a downloadable Access List (dACL), demonstrating how identity-based access control can change as the authentication phase changes.
 
 By the end of this article, a complete setup will be built to authenticate a Windows 11 domain-joined endpoint using PEAP-MSCHAPv2 Machine Authentication, transition to PEAP-MSCHAPv2 User Authentication after interactive login, and dynamically enforce identity-based network access through Cisco ISE using VLAN assignment and downloadable ACLs.
 
 ## Protocols... always! 
 
-Before jumping into the configuration, protocols should be treated as different components of the same authentication process. Each one has a specific responsibility, and understanding how they fit together will make the configuration much easier to follow.
+Before jumping into the configuration, protocols should be treated as different components of the same authentication process. Each one has a specific job to do, and understanding how they fit together will make the configuration much easier to follow.
 
 **802.1X:** is the access control framework that requires an endpoint to authenticate before gaining network access.
 
 It defines three roles:
 
 * **Supplicant**: The endpoint requesting network access, such as a Windows 11 machine.
-* **Authenticator**: The network device controlling access, such as a Cisco vSwitch.
-* **Authentication Server**: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
+* **Authenticator (NAD)**: The network device controlling access, such as a Cisco Switch or a WLC.
+* **Authentication Server (NAS)**: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
 
-802.1X uses EAP to carry authentication messages between the supplicant and the authentication server through the authenticator. Think of it as the gatekeeper at the entrance of the network. The endpoint requests access, the switch controls the entrance, and ISE decides whether the authentication is valid.
+802.1X uses EAP to carry authentication messages between the supplicant and the authentication server through the authenticator. The endpoint requests access, the NAD controls the entrance, and ISE decides whether the authentication is valid.
 
 **But how do these devices actually communicate?**
 
@@ -74,7 +74,7 @@ The switch communicates with ISE using RADIUS over IP. ISE evaluates the authent
 
 * **802.1X**: Defines and Controls secure access to the network.
 * **EAP**: Carries the authentication conversation.
-* **PEAP**: Protects the inner authentication exchange.
+* **PEAP**: Protects the inner authentication exchange.(Outer method)
 * **MSCHAPv2**: Authenticates the machine or user credentials (Inner method).
 * **RADIUS**: Carries the authentication request and result between the switch and ISE.
 * **ISE**: Evaluates the request and decides what access should be granted.
@@ -128,7 +128,7 @@ Computer name , Domain, and workgroup settings section confirms that Location2-E
 
 ## Configuring Active Directory Users, Computers and GPOs
 
-The main purpose of this section is to automatically enable 802.1x and configure supplicant for domain-joined Endpoints plus trusting your root CA for authentication:
+The main purpose of this section is to automatically enable 802.1X and configure the supplicant on domain-joined endpoints, including configuring the endpoint to trust the root CA that issued the ISE server certificate used to establish the PEAP TLS tunnel.
 
 1- Run `dsa.msc` to open Active Directory Users and Computers.
 
@@ -157,7 +157,7 @@ The main purpose of this section is to automatically enable 802.1x and configure
 
 10- Configure the native supplicant Policy as follows:
 
-> **Note:** Change trusted authentication server name and CA paramaters according to your setup.
+> **Note:** Adjust the trusted authentication server name and CA settings according to your environment. For a lab or testing environment, you may choose to disable server certificate validation; however, this causes the supplicant to accept the RADIUS server's certificate without verifying its trust chain and identity.
 {: .prompt-tip }
 
 Enable use of IEEE 802.1X authentication for network access: `Enabled`
