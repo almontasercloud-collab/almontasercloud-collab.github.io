@@ -160,17 +160,12 @@ The main purpose of this section is to automatically enable 802.1X and configure
 > **Note:** Adjust the trusted authentication server name and CA settings according to your environment. For a lab or testing environment, you may choose to disable server certificate validation; however, this causes the supplicant to accept the RADIUS server's certificate without verifying its trust chain and identity.
 {: .prompt-tip }
 
-Enable use of IEEE 802.1X authentication for network access: `Enabled`
-
-Select a network authentication method: Microsoft: `Protected EAP (PEAP)`
-
-Connect to these servers: `ise.montaser.local`
-
-Trusted Root Certification Authorities: `montaser-LAB-DC01-CA`
-
-Select Authentication Method: Secured password `EAP-MSCHAP v2`
-
-Automatically use my Windows logon name and password (and domain if any): `Enabled`
+* Enable use of IEEE 802.1X authentication for network access: `Enabled`
+* Select a network authentication method: Microsoft: `Protected EAP (PEAP)`
+* Connect to these servers: `ise.montaser.local`
+* Trusted Root Certification Authorities: `montaser-LAB-DC01-CA`
+* Select Authentication Method: Secured password `EAP-MSCHAP v2`
+* Automatically use my Windows logon name and password (and domain if any): `Enabled`
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/supplicant_conf.png) 
 
