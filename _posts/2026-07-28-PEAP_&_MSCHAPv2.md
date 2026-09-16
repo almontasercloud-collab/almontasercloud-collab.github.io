@@ -10,14 +10,7 @@ pin: false
 
 # Introduction
 
-Network access does not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity of the person using it.
-
-This is where **802.1X, PEAP-MSCHAPv2, Cisco ISE, and Active Directory** come together.
-
-In this article, you will build a complete wired network authentication scenario that demonstrates how an endpoint moves through two distinct authentication phases:
-
-* **Machine Authentication:** The Windows endpoint authenticates using its domain computer credentials through PEAP-MSCHAPv2.
-* **User Authentication:** After a user logs in, the same endpoint authenticates using the user's Active Directory credentials through PEAP-MSCHAPv2.
+Network access does not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity of the person using it. This is where **802.1X, PEAP-MSCHAPv2, Cisco ISE, and Active Directory** come together.
 
 Using Cisco ISE as the RADIUS server and Active Directory as the identity source, you will explore how authentication results are evaluated against authorization policies and translated into actual network access. Depending on the authenticated identity, Cisco ISE will dynamically assign the endpoint to a specific VLAN and apply a downloadable Access List (dACL), demonstrating how identity-based access control can change as the authentication phase changes.
 
@@ -25,21 +18,21 @@ By the end of this article, a complete setup will be built to authenticate a Win
 
 ## Protocols... always! 
 
-Before jumping into the configuration, protocols should be treated as different components of the same authentication process. Each one has a specific job to do, and understanding how they fit together will make the configuration much easier to follow.
+Before jumping into the configuration, protocols should be treated as different components of the same authentication process. Each one has a specific work to do, and understanding how they fit together will make the configuration much easier to follow.
 
 **802.1X:** is the access control framework that requires an endpoint to authenticate before gaining network access.
 
 It defines three roles:
 
-* **Supplicant**: The endpoint requesting network access, such as a Windows 11 machine.
-* **Authenticator (NAD)**: The network device controlling access, such as a Cisco Switch or a WLC.
-* **Authentication Server (NAS)**: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
+* **Supplicant**: The endpoint requesting network access, such as a Windows, Android, or iOS device.
+* **Authenticator**: The network device controlling access, such as a Cisco Switch or a WLC.
+* **Authentication Server**: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
 
 802.1X uses EAP to carry authentication messages between the supplicant and the authentication server through the authenticator. The endpoint requests access, the NAD controls the entrance, and ISE decides whether the authentication is valid.
 
 **But how do these devices actually communicate?**
 
-The endpoint and switch exchange EAP messages using EAP over LAN (EAPoL). The switch then forwards the authentication conversation to ISE using RADIUS. This separation is important: 802.1X defines the access control framework, while EAP provides the authentication message format and RADIUS carries the authentication exchange between the switch and ISE.
+The endpoint and switch exchange EAP messages using EAP over LAN (EAPoL). The switch then forwards the authentication conversation to ISE using RADIUS. 802.1X defines the access control framework, while EAP provides the authentication message format and RADIUS carries the authentication exchange between the switch and ISE.
 
 **PEAP — The Protected Tunnel**
 
@@ -101,7 +94,7 @@ The access port `Gi0/1` connects to the endpoint, while the uplink `Gi0/0` conne
 The Core-Switch provides the Layer 3 path between the access switch and ISE. It simply routes the RADIUS traffic between them; no authentication or authorization decisions are made here.
 
 * **ISE:** (RADIUS / Policy)
-ISE acts as the RADIUS server and policy engine. It receives MAB requests, identifies the endpoint, and returns the initial authorization result. Later, when the endpoint authenticates using PEAP, ISE handles the authentication process, validates the MSCHAPv2 credentials against Active Directory, and returns the appropriate authorization result — in this case, `VLAN 20`.
+ISE acts as the RADIUS server and policy engine. It identifies the endpoint, and returns the initial authorization result. Later, when the endpoint authenticates using PEAP, ISE handles the authentication process, validates the MSCHAPv2 credentials against Active Directory, and returns the appropriate authorization result.
 
 > This article assumes that Cisco ISE is already joined to the `montaser.local` Active Directory domain.
 {: .prompt-warning }
@@ -358,7 +351,7 @@ For this lab, the required services may include DNS and DHCP.
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Permit_AD_Service_dACL.png)
 
 
-Save it, Then the `PreUserAuth_Access` authorization profile for the initial access state before the endpoint completes user authentication. Its purpose is to provide the endpoint with the minimum access required during this stage while preventing it from receiving the same level of access granted to a fully authenticated user. For this lab, the profile returns the Permit_AD_service downloadable ACL (dACL) defined in the previous step.
+Save it, Then create the `PreUserAuth_Access` authorization profile for the initial access state before the endpoint completes user authentication. Its purpose is to provide the endpoint with the minimum access required during this stage while preventing it from receiving the same level of access granted to a fully authenticated user. For this lab, the profile returns the `Permit_AD_service` downloadable ACL (dACL) defined in the previous step.
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/PreUserAuth_Access.png)
 
@@ -366,11 +359,11 @@ Save it, Then the `PreUserAuth_Access` authorization profile for the initial acc
 
 After successful user and machine authentication, you can further test authorization by allowing a specific AD user group to access only a specific subnet. In this lab, users who are members of the `Corporate Users` AD group will be permitted to communicate only with hosts in the `172.16.2.0/24` subnet.
 
-First, create create the **Internal Only** dACL which restrict the communication to `172.16.2.0/24` network resources.
+First, create create the `Internal Only` dACL which restrict the communication to `172.16.2.0/24` network resources.
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Internal_Only_dACL.png)
 
-Then, create the **Permit_Internal_Access** authorization profile and configure it to return the **Internal_Only** dACL.
+Then, create a new authorization profile and name it `Permit_Internal_Access` and prconfigure it to return the `Internal_Only` dACL.
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Permit_Internal_Access.png)
 
@@ -428,11 +421,11 @@ As you can see, the request matched the `Location2_Wired` Policy Set and the `80
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/MAR_IN_ACT.png)
 
-Step 24422, **"ISE has confirmed previous successful machine authentication for user in Active Directory"**, is the result of enabling `MAR` (Machine Access Restriction).
+The line **"24422 ISE has confirmed previous successful machine authentication for user in Active Directory"**, is the result of enabling **MAR**.
 
-Without `MAR`, this step will fail, along with the user authentication attempt, because ISE cannot verify that the user authentication is associated with a previously successful machine authentication.
+Without **MAR**, this step will fail, along with the user authentication attempt, because ISE cannot verify that the user authentication is associated with a previously successful machine authentication.
 
-* Cisco vSwitch (NAD) applying `Internal_Only` dACL for `corpuser`:
+* Cisco vSwitch applying `Internal_Only` dACL for `corpuser`:
 
 ```bash
 
@@ -480,8 +473,8 @@ Method status list:
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Netadmin_Access.png)
 
 ## Conclusion
-Implementing sequential machine-and-user authorization rules provides a highly secure approach to endpoint control without the administrative overhead of Machine Access Restrictions (MAR). By leveraging the native Network Access:WasMachineAuthenticated attribute, Cisco ISE effectively creates a dual-factor validation requirement: a user must not only possess valid corporate credentials but must also operate from a managed, Active Directory-joined asset.
+Implementing sequential machine-and-user authorization rules secures endpoints without the overhead of Machine Access Restrictions (MAR). By using Cisco ISE's native Network Access:WasMachineAuthenticated attribute, organizations create a dual-factor requirement: users must provide valid credentials and operate from a managed, Active Directory-joined asset. This prevents rogue or unmanaged personal devices from accessing internal networks.
 
-This simple policy modification acts as a strong defense against rogue or unmanaged personal devices attempting to access your internal networks. To ensure this configuration functions seamlessly, verify that your client endpoints are pushed via Group Policy to use "User or computer authentication," and maintain a single Policy Service Node (PSN) or strict session persistence on your network load balancers to preserve ISE's internal authentication cache.
+However, traditional credential-based methods (usernames and passwords) are inherently vulnerable to credential theft, phishing, and password spraying. For the highest level of network security, organizations should transition to EAP-TLS, which replaces weak passwords with cryptographic, certificate-based authentication for both the machine and the user.
 
-However, this PEAP-based caching approach has inherent limitations. Because ISE tracks the machine status using temporary memory caches per Policy Service Node (PSN), it is highly vulnerable to session drops during Windows user logons, relies on strict load-balancer persistence, and can fail if the machine cache expires before the user authenticates. To completely eliminate these caching and timing dependencies, organizations should transition to TEAP (Tunnel Extensible Authentication Protocol), which builds a single secure tunnel to authenticate both the machine and user simultaneously, natively providing reliable EAP-chaining without infrastructure workarounds.
+Furthermore, traditional PEAP-based caching has limitations. Because ISE tracks machine status using temporary memory caches per Policy Service Node (PSN), it is vulnerable to session drops during logons, relies on strict load-balancer persistence, and fails if the cache expires. To eliminate these caching dependencies and password vulnerabilities entirely, organizations should adopt TEAP (Tunnel Extensible Authentication Protocol) with EAP-TLS. TEAP builds a single secure tunnel to authenticate both the machine and user certificates simultaneously, providing reliable, chained authentication without infrastructure workarounds.
