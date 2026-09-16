@@ -25,7 +25,7 @@ Before jumping into the configuration, protocols should be treated as different 
 It defines three roles:
 
 * **Supplicant**: The endpoint requesting network access, such as a Windows, Android, or iOS device.
-* **Authenticator**: The network device controlling access, can be a netowork Switch , Wireless Lan Controller or any other networking device that supports 802.1x .
+* **Authenticator**: The network device controlling access, can be a netowork Switch , Wireless Lan Controller or any other networking device that supports 802.1x.
 * **Authentication Server**: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
 
 802.1X uses EAP to carry authentication messages between the supplicant and the authentication server through the authenticator. The endpoint requests access, the NAD controls the entrance, and ISE decides whether the authentication is valid.
@@ -473,7 +473,7 @@ Method status list:
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Netadmin_Access.png)
 
 ## Conclusion
-Implementing sequential machine-and-user authorization rules secures endpoints without the overhead of Machine Access Restrictions (MAR). By using Cisco ISE's native Network Access:WasMachineAuthenticated attribute, organizations create a dual-factor requirement: users must provide valid credentials and operate from a managed, Active Directory-joined asset. This prevents rogue or unmanaged personal devices from accessing internal networks.
+Implementing sequential machine-and-user authorization rules secures endpoints without the overhead of Machine Access Restrictions (MAR). By using Cisco ISE's native `Network Access:WasMachineAuthenticated` attribute, organizations create a dual-factor requirement: users must provide valid credentials and operate from a managed, Active Directory-joined asset. This prevents rogue or unmanaged personal devices from accessing internal networks.
 
 However, traditional credential-based methods (usernames and passwords) are inherently vulnerable to credential theft, phishing, and password spraying. For the highest level of network security, organizations should transition to EAP-TLS, which replaces weak passwords with cryptographic, certificate-based authentication for both the machine and the user.
 
