@@ -25,7 +25,7 @@ Before jumping into the configuration, protocols should be treated as different 
 It defines three roles:
 
 * **Supplicant**: The endpoint requesting network access, such as a Windows, Android, or iOS device.
-* **Authenticator**: The network device controlling access, such as a Cisco Switch or a WLC.
+* **Authenticator**: The network device controlling access, can be a netowork Switch , Wireless Lan Controller or any other networking device that supports 802.1x .
 * **Authentication Server**: The server responsible for validating the endpoint's credentials, such as Cisco ISE.
 
 802.1X uses EAP to carry authentication messages between the supplicant and the authentication server through the authenticator. The endpoint requests access, the NAD controls the entrance, and ISE decides whether the authentication is valid.
