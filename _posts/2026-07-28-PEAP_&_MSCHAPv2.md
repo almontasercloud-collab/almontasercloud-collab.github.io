@@ -75,11 +75,9 @@ The switch communicates with ISE using RADIUS over IP. ISE evaluates the authent
 
 Once these pieces work together, you can move beyond simply authenticating an endpoint.
 
-## Lab Topology and Components
+### Topology Diagram
 
 Before walking through the authentication flow, let's establish the lab environment. The topology is intentionally simple: a single endpoint connecting through a Layer 2 access switch, which uplinks to a core switch and then to the identity and directory services.
-
-### Topology Diagram
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Diagram.png)
 
@@ -476,5 +474,3 @@ Method status list:
 Implementing sequential machine-and-user authorization rules secures endpoints without the overhead of Machine Access Restrictions (MAR). By using Cisco ISE's native `Network Access:WasMachineAuthenticated` attribute, organizations create a dual-factor requirement: users must provide valid credentials and operate from a managed, Active Directory-joined asset. This prevents rogue or unmanaged personal devices from accessing internal networks.
 
 However, traditional credential-based methods (usernames and passwords) are inherently vulnerable to credential theft, phishing, and password spraying. For the highest level of network security, organizations should transition to EAP-TLS, which replaces weak passwords with cryptographic, certificate-based authentication for both the machine and the user.
-
-Furthermore, traditional PEAP-based caching has limitations. Because ISE tracks machine status using temporary memory caches per Policy Service Node (PSN), it is vulnerable to session drops during logons, relies on strict load-balancer persistence, and fails if the cache expires. To eliminate these caching dependencies and password vulnerabilities entirely, organizations should adopt TEAP (Tunnel Extensible Authentication Protocol) with EAP-TLS. TEAP builds a single secure tunnel to authenticate both the machine and user certificates simultaneously, providing reliable, chained authentication without infrastructure workarounds.

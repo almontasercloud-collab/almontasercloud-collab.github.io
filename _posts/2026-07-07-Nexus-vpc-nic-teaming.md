@@ -3,8 +3,6 @@ title: NIC Teaming to Cisco Nexus vPC
 date: 2026-07-13 16:25:00 +0300
 categories: [Labs, Switching]
 tags: [networking, Network Engineering, Computer Networks, Switching, NXOS, Nexus, vPC]
-image:
-  path: /assets/img/post_covers/nic_teaming_vpc.png
 pin: false
 ---
 
