@@ -8,8 +8,6 @@ image:
 pin: false
 ---
 
-# Introduction
-
 As the previous [**PEAP & MSCHAPv2 — Machine and User AAA**](https://almontaserbabiker.com/posts/PEAP_&_MSCHAPv2/) lab article concluded, username and password authentication is not the most secure way to authenticate users or machines, especially given the common vulnerabilities inherent in credential-based methods. To address these persistent security gaps, this article explores a significantly more robust alternative: **PEAP with EAP-TLS**. 
 
 By combining the encrypted tunneling of Protected Extensible Authentication Protocol (PEAP) with the rigorous, certificate-based mutual authentication of Extensible Authentication Protocol-Transport Layer Security (EAP-TLS), organizations can eliminate password-based vectors entirely. We will dive into how this architecture functions, why it mitigates traditional credential risks, and the practical steps required for its deployment.
@@ -105,7 +103,7 @@ Another aspect worth looking at is the certificate templates created for the aut
 
 ![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Cert_templates.png)
 
-### Automatic Client Configuration
+### Automatic Client Configuration:
 
 Once Active Directory is properly configured and the relevant policies are applied to domain-joined endpoints to provision client certificates and supplicant settings, you can see that users are automatically equipped with their user certificates, while the computer is provisioned with its machine certificate and supplicant configuration.
  

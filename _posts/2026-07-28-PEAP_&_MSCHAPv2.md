@@ -8,8 +8,6 @@ image:
 pin: false
 ---
 
-# Introduction
-
 Network access does not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity of the person using it. This is where **802.1X, PEAP-MSCHAPv2, Cisco ISE, and Active Directory** come together.
 
 Using Cisco ISE as the RADIUS server and Active Directory as the identity source, you will explore how authentication results are evaluated against authorization policies and translated into actual network access. Depending on the authenticated identity, Cisco ISE will dynamically assign the endpoint to a specific VLAN and apply a downloadable Access List (dACL), demonstrating how identity-based access control can change as the authentication phase changes.
