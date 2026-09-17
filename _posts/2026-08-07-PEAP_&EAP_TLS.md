@@ -1,6 +1,6 @@
 ---
 title: PEAP & EAP-TLS — Machine and User AAA
-date: 2026-07-28 16:25:00 +0300
+date: 2026-08-07 12:25:00 +0300
 categories: [Labs, Cisco ISE]
 tags: [networking, Network Engineering, 802.1x, MAB, security, cisco ISE, MSCHAPv2, EAP, EAP-TLS,  Network Access Control, AAA, Network Access Control]
 image:
@@ -16,7 +16,7 @@ By combining the encrypted tunneling of Protected Extensible Authentication Prot
 
 ## Protocols and Protocols! 
 
-Before jumping into the configuration, review the protocols defined under [**PEAP & MSCHAPv2**](https://almontaserbabiker.com/posts/PEAP_&_MSCHAPv2/#protocols-always) lab article. The same exact set of protocols will be used in this lab in while replacing MSCHAPv2 with to EAP-TLS as the inner method for PEAP.
+Before jumping into the configuration, review the protocols defined under [**PEAP & MSCHAPv2**](https://almontaserbabiker.com/posts/PEAP_&_MSCHAPv2/#protocols-always) lab article. The same exact set of protocols will be used in this lab while replacing MSCHAPv2 with to EAP-TLS as the inner method for PEAP.
 
 **EAP-TLS** (Extensible Authentication Protocol-Transport Layer Security): is a high-security network access method that uses digital certificates on both the client device and the authentication server to verify identities instead of relying on traditional usernames and passwords.
 
