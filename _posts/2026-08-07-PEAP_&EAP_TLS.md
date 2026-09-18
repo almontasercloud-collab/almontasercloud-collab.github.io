@@ -312,6 +312,6 @@ The `PEAP_Machine_Auth` rule handles the initial machine authentication and retu
 The `Location2_NetAdmin` rule requires successful machine authentication and membership in the `Location2_Net_Admins` AD group, granting `PermitAccess` or Full access.
 
 The `Location2_User` rule similarly requires prior machine authentication but matches members of the `location2_users` group and returns `Permit_Internal_Access` which applies a dACL to permit traffic to `172.16.2.0/24` network only.
-Any request that does not match these conditions falls through to the Default rule and receives DenyAccess.
+Any request that does not match these conditions falls through to the Default rule and receives DenyAccess
 
 ![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Authz.png)
