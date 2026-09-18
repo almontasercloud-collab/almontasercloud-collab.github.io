@@ -10,7 +10,7 @@ pin: false
 
 As the previous [**PEAP & MSCHAPv2 — Machine and User AAA**](https://almontaserbabiker.com/posts/PEAP_&_MSCHAPv2/) lab article concluded, username and password authentication is not the most secure way to authenticate users or machines, especially given the common vulnerabilities inherent in credential-based methods. To address these persistent security gaps, this article explores a significantly more robust alternative: **PEAP with EAP-TLS**. 
 
-By combining the encrypted tunneling of Protected Extensible Authentication Protocol (PEAP) with the rigorous, certificate-based mutual authentication of Extensible Authentication Protocol-Transport Layer Security (EAP-TLS), organizations can eliminate password-based vectors entirely. We will dive into how this architecture functions, why it mitigates traditional credential risks, and the practical steps required for its deployment.
+By combining the encrypted tunneling of Protected Extensible Authentication Protocol (PEAP) with the rigorous, certificate-based mutual authentication of Extensible Authentication Protocol-Transport Layer Security (EAP-TLS), organizations can eliminate password-based vectors entirely. you will dive into how this architecture functions, why it mitigates traditional credential risks, and the practical steps required for its deployment.
 
 ## Protocols and Protocols! 
 
@@ -52,23 +52,21 @@ Active Directory stores the user accounts used to authenticate inside the PEAP t
 
 ## Configure the Supplicant (Location2-EP-1)
 
-Basically, Location2-EP-1 is a Windows 11 workstation joined to the montaser.local Active Directory domain.
+Basically, Location2-EP-1 is a Windows 11 workstation joined to the `montaser.local` Active Directory domain.
 
-For convenience, you can push the supplicant service and network profile configuration from the domain controller using a Group Policy Object (GPO). This keeps the lab close to how things are handled in real deployments, where you might have tens or hundreds of workstations to configure.
+For convenience, you can push the supplicant service, network profile configuration, and the certificates required for EAP-TLS from the domain controller using Group Policy Objects (GPOs). This keeps the lab close to how things are handled in real deployments, where you may have tens or hundreds of workstations to configure.
 
-Instead of manually configuring every endpoint, you can let the domain handle it.
-
-First, let's verify that the workstation is properly joined to the Active Directory domain. Navigate to `Control Panel > System and Security > System`
+First, verify that the workstation is properly joined to the Active Directory domain. Navigate to `Control Panel > System and Security > System`
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Endpoint_loc2.png)
 
-Computer name , Domain, and workgroup settings section confirms that Location2-EP-1 has joined `montaser.local` domain, at this point you can jump directly to the domain controller to create configuration GPOs.
+Under **Computer name, Domain, and workgroup settings**, you can confirm that Location2-EP-1 is joined to the montaser.local domain.
 
 ## Overview of Active Directory Configuration
 
 In this lab, Active Directory provides the certificate auto-enrollment and Group Policy services required for 802.1X authentication. The domain-joined machines receive the necessary supplicant configuration and trusted root CA through Group Policy, while certificate templates and auto-enrollment policies handle the provisioning of machine and user certificates for EAP-TLS authentication. The following sections focus on the specific Active Directory configurations used in this lab and how they support the authentication flow.
 
-> **Note:** This guide bypasses the initial deployment steps for certificate auto-enrollment and client supplicant provisioning, assuming these baseline services are already fully operational. Instead, the following key points are highlighted to outline exactly how the Active Directory infrastructure supports and interacts with our authentication flow inside this lab environment.
+> **Note:** This guide bypasses the deployment steps for certificate auto-enrollment and client supplicant provisioning, assuming these baseline services are already fully operational. Instead, the following key points are highlighted to outline exactly how the Active Directory infrastructure supports and interacts with our authentication flow inside this lab environment.
 {: .prompt-tip }
 
 ### Users and User Groups:
@@ -247,3 +245,73 @@ Finally, enable Resolve Identity Ambiguity so that ISE can use the extracted ide
 
 ![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/CAP_Conf.png)
 
+### You have trust Issues:
+
+At this point, it is important to distinguish between the two sides of trust involved in EAP-TLS. The ISE **server certificate** is presented by ISE to the Windows endpoint, while the **client certificate** is presented by the endpoint to ISE. **Each side therefore needs to trust the CA that issued the certificate presented by the other side**(hence the trust issues)**.** In this lab, the same Root CA is used to sign both certificates, but the trust relationships serve different purposes.
+
+``` bash
+                    Your Root CA
+                   /            \
+                  /              \
+                 ▼                ▼
+       ISE EAP Server Cert     User/Machine Cert
+              │                       │
+              │                       │
+              ▼                       ▼
+       Presented by ISE        Presented by endpoint
+              │                       │
+              ▼                       ▼
+       Windows trusts CA         ISE trusts CA
+```
+
+### EAP-TLS Server Certificate:
+
+The EAP-TLS server certificate identifies ISE to the endpoint during the TLS negotiation. When the Windows native supplicant connects to ISE using EAP-TLS, ISE presents this certificate to the endpoint, allowing Windows to verify the identity of the authentication server.
+
+In this lab, the CA that issued the ISE EAP-TLS certificate was already included in the trusted CA configuration deployed to the Windows endpoints through the GPOs configured earlier. As a result, the native Windows supplicant can validate the certificate presented by ISE without requiring manual certificate configuration on each workstation.
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/EAP-TLS_SERV.png)
+
+> Note: It is recommended to use a dedicated certificate for EAP authentication, separate from the certificates used for ISE administration and portals. In this lab, the EAP-TLS authentication certificate was generated from an ISE-generated CSR and then signed by the `montaser.local` domain CA before being imported into ISE.
+{: .prompt-tip }
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/EAP-TLS_SERV2.png)
+
+
+### Trust the Client Certificate CA:
+
+Before ISE can authenticate the client certificates presented during EAP-TLS, it must trust the Certificate Authority (CA) that issued those certificates. To establish this trust, import the CA certificate into ISE's Trusted Certificates store and enable the Trust for client authentication and Syslog usage. This tells ISE that certificates issued by this CA can be trusted for endpoint authentication through EAP.
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/trust_CA.png)
+
+### Configure the Policy Set:
+
+> **Note:** Navigate to **Policy > Policy Elements > Results > Allowed Protocols**, open **Default Network Access**, and make sure **EAP-TLS** is enabled.
+{: .prompt-tip }
+
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/allowed_protocols.png)
+
+Create a dedicated policy set for the Location 2 wired endpoints to handle their 802.1X authentication and authorization. 
+
+* Condition: network device group containing device type `Wired Devices` and Device location `Locaction2`.
+
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set1.png)
+
+### Configure Authentication Rule:
+
+Open the policy set you created, under the Authentication Policy Select preconfigured condition `Wired 802.1x`, and  select the Certificate Authentication Profile (CAP) you created  (`EAP-TLS`) as the identity source. This allows ISE to use the identity extracted from the client certificate during EAP-TLS authentication.
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Auth_prof.png)
+
+### Configure Authorization Rules:
+
+The authorization policy determines what authenticated endpoints are allowed to access after authentication succeeds. In this lab, the policy distinguishes between **machine authentication**, `Location 2 NetAdmin` users, and regular `Location 2 users`.
+
+The `PEAP_Machine_Auth` rule handles the initial machine authentication and returns the `PreUserAuth_Access` profile which applies a dACL that permits DHCP and DNS traffic only.
+The `Location2_NetAdmin` rule requires successful machine authentication and membership in the `Location2_Net_Admins` AD group, granting `PermitAccess` or Full access.
+
+The `Location2_User` rule similarly requires prior machine authentication but matches members of the `location2_users` group and returns `Permit_Internal_Access` which applies a dACL to permit traffic to `172.16.2.0/24` network only.
+Any request that does not match these conditions falls through to the Default rule and receives DenyAccess.
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Authz.png)
