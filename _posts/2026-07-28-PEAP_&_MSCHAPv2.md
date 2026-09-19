@@ -123,9 +123,9 @@ Perform the following steps on your existing domain controller:
 
 1- Run `dsa.msc` to open Active Directory Users and Computers.
 
-2- Create a new Organizational Unit (Optional) name it `Location_2_Wired_Workstations`
+2- Create a new Organizational Unit (Optional) name it `Location_2_Wired_Workstations`.
 
-3- Add Location2-EP-1 to the newly created Organizational Unit
+3- Add Location2-EP-1 to the newly created Organizational Unit.
 
 4- Create A new security group and add the workstation to that group.
 
