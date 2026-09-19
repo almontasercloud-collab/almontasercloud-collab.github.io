@@ -245,7 +245,7 @@ Finally, enable Resolve Identity Ambiguity so that ISE can use the extracted ide
 
 ![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/CAP_Conf.png)
 
-### You have trust Issues:
+## You have trust Issues:
 
 At this point, it is important to distinguish between the two sides of trust involved in EAP-TLS. The ISE **server certificate** is presented by ISE to the Windows endpoint, while the **client certificate** is presented by the endpoint to ISE. **Each side therefore needs to trust the CA that issued the certificate presented by the other side**(hence the trust issues)**.** In this lab, the same Root CA is used to sign both certificates, but the trust relationships serve different purposes.
 
@@ -284,7 +284,7 @@ Before ISE can authenticate the client certificates presented during EAP-TLS, it
 
 ![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/trust_CA.png)
 
-### Configure the Policy Set:
+## Configure the Policy Set
 
 > **Note:** Navigate to **Policy > Policy Elements > Results > Allowed Protocols**, open **Default Network Access**, and make sure **EAP-TLS** is enabled.
 {: .prompt-tip }
@@ -315,3 +315,167 @@ The `Location2_User` rule similarly requires prior machine authentication but ma
 Any request that does not match these conditions falls through to the Default rule and receives DenyAccess
 
 ![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Authz.png)
+
+## Authentication and Authorization Testing
+
+This section puts the configuration built throughout this lab through an end-to-end validation. The testing starts with `Location2-EP-1` performing machine authentication using EAP-TLS, after which ISE grants the **pre-user access** required for essential services such as DHCP and DNS.
+
+Once the machine has successfully authenticated, the user authentication process can take place using EAP-TLS as well. A standard Location 2 user is authorized according to the `Location2_users` AD group and is restricted to resources within the `172.16.2.0/24` subnet, while a Location 2 network administrator receives full network access based on membership in the `Location2_Aet_Admins` AD group.
+
+Throughout these tests, a successful machine authentication must already exist before user access is granted. This also provides an opportunity to observe how ISE validates the **Machine Authentication** condition used in the authorization policies through **MAR (Machine Access Restriction)**.
+
+### 1. Powering Up `Location2-EP-1`:
+
+Power on `Location2-EP-1` and allow Windows to complete its startup process. Before the user login screen is presented, the endpoint should perform machine authentication using its EAP-TLS certificate.
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_machine1.png)
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_machine2.png)
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_machine3.png)
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_machine4.png)
+
+``` bash 
+            Interface:  GigabitEthernet0/1
+          MAC Address:  5000.0008.0000
+         IPv6 Address:  Unknown
+         IPv4 Address:  10.1.2.27
+            User-Name:  Location2-EP-1.montaser.local
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  single-host
+     Oper control dir:  both
+      Session timeout:  3600s (local), Remaining: 3373s
+       Timeout action:  Reauthenticate
+      Restart timeout:  N/A
+Periodic Acct timeout:  N/A
+       Session Uptime:  234s
+    Common Session ID:  0A016403000000150AA6DBCD
+      Acct Session ID:  0x0000000C
+               Handle:  0xF1000008
+       Current Policy:  POLICY_Gi0/1
+
+Local Policies:
+        Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
+      Security Policy:  Should Secure
+      Security Status:  Link Unsecure
+
+
+Server Policies:
+           Vlan Group:  Vlan: 20
+              ACS ACL:  xACSACLx-IP-PERMIT_AD_Service-6aab39a4
+
+Method status list:
+      Method            State
+
+      dot1x              Authc Success
+```
+
+
+
+### 2. Login Using Location 2 Standard User: 
+
+Log in to Location2-EP-1 using a standard Location 2 user account. The user authentication is performed using EAP-TLS, and ISE evaluates the user's AD group membership together with the previously established machine authentication state.
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_loc2user_1.png)
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_loc2user_2.png)
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_loc2user_3.png)
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_loc2user_4.png)
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_loc2user_5.png)
+
+``` bash
+
+            Interface:  GigabitEthernet0/1
+          MAC Address:  5000.0008.0000
+         IPv6 Address:  Unknown
+         IPv4 Address:  169.254.9.19
+            User-Name:  loc2@montaser.local
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  single-host
+     Oper control dir:  both
+      Session timeout:  3600s (local), Remaining: 3263s
+       Timeout action:  Reauthenticate
+      Restart timeout:  N/A
+Periodic Acct timeout:  N/A
+       Session Uptime:  1088s
+    Common Session ID:  0A016403000000150AA6DBCD
+      Acct Session ID:  0x0000000F
+               Handle:  0xF1000008
+       Current Policy:  POLICY_Gi0/1
+
+Local Policies:
+        Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
+      Security Policy:  Should Secure
+      Security Status:  Link Unsecure
+
+
+Server Policies:
+           Vlan Group:  Vlan: 20
+              ACS ACL:  xACSACLx-IP-Internal_Only-6a95ad87
+
+Method status list:
+      Method            State
+
+      dot1x              Authc Success
+
+```
+
+Because the user belongs to the `Location2_users` group, ISE should return the corresponding authorization result, allowing the endpoint to communicate with resources within the `172.16.2.0/24` subnet.
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_loc2user_6.png)
+
+### 3. Login Using Location 2 Network Administrator:
+
+Log out of the current session and log in using a Location 2 network administrator account. The user is again authenticated using EAP-TLS, while ISE validates the user's membership in the Network Administrators AD group.
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_loc2netadmin_1.png)
+
+``` bash
+            Interface:  GigabitEthernet0/1
+          MAC Address:  5000.0008.0000
+         IPv6 Address:  Unknown
+         IPv4 Address:  10.1.2.27
+            User-Name:  loc2netadmin@montaser.local
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  single-host
+     Oper control dir:  both
+      Session timeout:  3600s (local), Remaining: 3337s
+       Timeout action:  Reauthenticate
+      Restart timeout:  N/A
+Periodic Acct timeout:  N/A
+       Session Uptime:  2231s
+    Common Session ID:  0A016403000000150AA6DBCD
+      Acct Session ID:  0x00000013
+               Handle:  0xF1000008
+       Current Policy:  POLICY_Gi0/1
+
+Local Policies:
+        Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
+      Security Policy:  Should Secure
+      Security Status:  Link Unsecure
+
+
+Server Policies:
+           Vlan Group:  Vlan: 20
+
+Method status list:
+      Method            State
+
+      dot1x              Authc Success
+
+
+```
+
+Provided that the required machine authentication is already present, ISE should authorize the session with the administrator access policy, granting the user **full network access**.
+
+![CMD as Administrator](/assets/img/posts_photos/PEAP_EAP_TLS/Test_loc2netadmin_2.png)
+
+## Conclusion 
+
+This lab demonstrated how Cisco ISE can provide a complete wired network access control solution using EAP-TLS for both machine and user authentication. By replacing username-and-password-based authentication with certificate-based authentication, the deployment removes the need to rely on passwords during the network access process and instead requires the endpoint and user to present valid certificates issued by a trusted authority.
+
+The configuration also demonstrated how authentication and authorization can be separated. After successful machine authentication, ISE grants the endpoint the limited access required for essential services such as DHCP and DNS. Once the user authenticates, ISE evaluates the user's identity and Active Directory group membership to determine the appropriate level of network access. Standard Location 2 users are restricted to the 172.16.2.0/24 network, while members of the Network Administrators group receive full network access.
+
+However, MAR should not be considered the preferred long-term mechanism for enforcing machine-and-user authentication relationships. It relies on ISE associating a subsequent user authentication with a previously successful machine authentication, which introduces operational considerations around session state, timing, reauthentication, and endpoint behavior. For environments requiring a stronger and more explicit binding between machine and user identities, EAP-TEAP with appropriate inner-method configuration provides a more purpose-built approach for carrying out machine and user authentication within the same EAP conversation.
+
+Overall, this lab establishes a certificate-based foundation for wired access control while also demonstrating both the capabilities and the limitations of using MAR as the mechanism for enforcing machine-before-user authentication.
