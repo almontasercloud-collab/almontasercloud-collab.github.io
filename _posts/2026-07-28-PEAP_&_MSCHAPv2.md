@@ -108,7 +108,7 @@ Instead of manually configuring every endpoint, you can let the domain handle it
 
 First, let's verify that the workstation is properly joined to the Active Directory domain. Navigate to `Control Panel > System and Security > System`
 
-> **Note:** You may need to change the default system-generated hostname and join the PC to your existing Active Directory domain.
+> **Note:** You may need to change the default system-generated hostname and join the PC to your existing Active Directory domain
 {: .prompt-tip }
 
 ![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Endpoint_loc2_min.png)
