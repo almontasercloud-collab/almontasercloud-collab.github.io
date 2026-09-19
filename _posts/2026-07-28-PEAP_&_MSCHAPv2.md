@@ -421,7 +421,7 @@ The line **"24422 ISE has confirmed previous successful machine authentication f
 
 Without **MAR**, this step will fail, along with the user authentication attempt, because ISE cannot verify that the user authentication is associated with a previously successful machine authentication.
 
-* Cisco vSwitch applying `Internal_Only` dACL for `corpuser`:
+* Cisco vSwitch applying `Internal_Only` dACL for `corpuser`
 
 ```bash
 
