@@ -77,7 +77,7 @@ Once these pieces work together, you can move beyond simply authenticating an en
 
 Before walking through the authentication flow, let's establish the lab environment. The topology is intentionally simple: a single endpoint connecting through a Layer 2 access switch, which uplinks to a core switch and then to the identity and directory services.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Diagram_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Diagram.png)
 
 ### Key Roles 
 
@@ -111,7 +111,7 @@ First, let's verify that the workstation is properly joined to the Active Direct
 > **Note:** You may need to change the default system-generated hostname and join the PC to your existing Active Directory domain
 {: .prompt-tip }
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Endpoint_loc2_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Endpoint_loc2.png)
 
 Computer name , Domain, and workgroup settings section confirms that Location2-EP-1 has joined `montaser.local` domain, at this point you can jump directly to the domain controller to create configuration GPOs.
 
@@ -129,22 +129,22 @@ Perform the following steps on your existing domain controller:
 
 4- Create A new security group and add the workstation to that group.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/users&computers_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/users&computers.png)
 
 5- Run `gpmc.msc` to open Group Policy Management console.
 6- Under `Location_2_Wired_Workstations` OU create a new policy object and name it `WiredAuto-Config-PEAP-GPO`
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/new_gpo_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/new_gpo.png)
 
 7- Right-click on `WiredAuto-Config-PEAP-GPO` and select Edit to start editing the GPO.
 
 8- Under `Computer Configuration > Windows Settings > Security Settings > System Services` locate the Wired AutoConfig service and set it to `Automatic`
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Wired_AutoConfig_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Wired_AutoConfig.png)
 
 9- `Computer Configuration > Windows Settings > Security Settings > Wired Network (IEEE 802.3) policies` right-click and Create new ... name it `Wired-Endpoints-802.1x-Policy` 
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/supplicant_policy_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/supplicant_policy.png)
 
 10- Configure the native supplicant Policy as follows:
 
@@ -158,18 +158,18 @@ Perform the following steps on your existing domain controller:
 * Select Authentication Method: Secured password `EAP-MSCHAP v2`
 * Automatically use my Windows logon name and password (and domain if any): `Enabled`
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/supplicant_conf_min.png) 
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/supplicant_conf.png) 
 
 11- Save all and Update the policy in Location2-EP-1 using the following command: 
 
 ```bash 
 gpupdate /force
 ```
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/update_success_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/update_success.png)
 
 12- Verify Location2-EP-1 802.1x supplicant is enabled and configured according to The GPO defined earlier:
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/verify_supplicant_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/verify_supplicant.png)
 
 At this point you are ready to start configuring the Network Access Device (Location2_Switch)
 
@@ -239,7 +239,7 @@ Navigate to:
 
 Click **Add** and enter the device details.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/ISE_NAD_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/ISE_NAD.png)
 
 ### Configure the device parameters:
 
@@ -250,7 +250,7 @@ Configure the following device parameters:
 * **Device Type:** Select the appropriate network device type for your environment.
 * **Network Device Group:** Assign the device to the relevant group if required.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/ISE_NAD2_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/ISE_NAD2.png)
 
 ### Configure RADIUS parameters:
 
@@ -258,7 +258,7 @@ Enable RADIUS authentication and configure the shared secret.
 
 The shared secret must match the key configured on the switch under the RADIUS server definition. In this lab, the switch uses ISE as its RADIUS server for authentication, authorization, and accounting.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/ISE_NAD3_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/ISE_NAD3.png)
 
 ### Integrate with AD and Enable MAR
 
@@ -270,7 +270,7 @@ Navigate to:`Administration > Identity Management > External Identity Sources > 
 
 If ISE is not already joined to the domain, configure the Active Directory join point using the domain name and an account with sufficient permissions to join the ISE node to the domain. After joining the domain, verify that the connection is successful, then retrieve the required AD groups. In this lab, the `Network Administrators` and `Corporate Users` groups are imported into ISE.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/AD_Ext_Src_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/AD_Ext_Src.png)
 
 **Enable MAR:**
 
@@ -282,7 +282,7 @@ The purpose of MAR is to allow ISE to determine whether a machine has previously
 
 The machine authentication and user authentication are separate PEAP authentication sessions. MAR allows ISE to correlate the machine authentication with the later user authentication for authorization purposes.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/enable_MAR_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/enable_MAR.png)
 
 > Note: MAR is a traditional mechanism used to support machine authentication with PEAP. Newer outer methods, such as TEAP, were developed to reduce dependency on MAR. TEAP uses a different authentication model and will be evaluated separately in a dedicated lab.
 {: .prompt-warning }
@@ -306,7 +306,7 @@ Policy Set configuration:
 >The policy set should be placed above the default policy set so that the requests from this lab are processed by the intended authentication and authorization rules.
 {: .prompt-tip }
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set1_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set1.png)
 
 After creating the policy set, open it to configure the Authentication Policy and Authorization Policy.
 
@@ -320,7 +320,7 @@ Configure the wired 802.1X authentication rule with the following settings:
 * **Condition**: Wired 802.1X authentication
 * **Allowed Protocols**: (ISE Identity Source Sequence that performs lookups against Active Directory)
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set2_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set2.png)
 
 The authentication result is then passed to the Authorization Policy, where ISE determines the appropriate network access level.
 
@@ -334,7 +334,7 @@ Create or select the authorization profile used by the Location2 wired authentic
 
 For this lab, the successful PEAP authentication result assigns the endpoint to `VLAN 20`.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Location2_vlan_assign_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Location2_vlan_assign.png)
 
 ### PreUserAuth_Access Authorization Profile:
 
@@ -344,12 +344,12 @@ First, create a dACL that permits only the traffic required to reach the appropr
 
 For this lab, the required services may include DNS and DHCP.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Permit_AD_Service_dACL_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Permit_AD_Service_dACL.png)
 
 
 Save it, Then create the `PreUserAuth_Access` authorization profile for the initial access state before the endpoint completes user authentication. Its purpose is to provide the endpoint with the minimum access required during this stage while preventing it from receiving the same level of access granted to a fully authenticated user. For this lab, the profile returns the `Permit_AD_service` downloadable ACL (dACL) defined in the previous step.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/PreUserAuth_Access_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/PreUserAuth_Access.png)
 
 ### Permit_Internal_Access Authorization Profile:
 
@@ -357,18 +357,18 @@ After successful user and machine authentication, you can further test authoriza
 
 First, create create the `Internal Only` dACL which restrict the communication to `172.16.2.0/24` network resources.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Internal_Only_dACL_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Internal_Only_dACL.png)
 
 Then, create a new authorization profile and name it `Permit_Internal_Access` and prconfigure it to return the `Internal_Only` dACL.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Permit_Internal_Access_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Permit_Internal_Access.png)
 
 
 ### Configure Authorization policy:
 
 The authorization policy processes requests sequentially from top to bottom. It enforces a dual-factor validation logic, verifying the user’s Active Directory group membership while strictly checking that the underlying machine successfully passed its own computer-phase authentication using the Network Access:WasMachineAuthenticated attribute.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set3_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/policy_set3.png)
 
 **PEAP_Machine_Auth:**
 
@@ -401,21 +401,21 @@ To evaluate the configuration, you can now power on Location2-EP-1 and log in us
 
 When Windows boots and reaches the login screen, its native supplicant immediately triggers a machine authentication attempt.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/supplicant_boot_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/supplicant_boot.png)
 
 The machine authenticates successfully using its Active Directory computer account credentials. ISE returns the `Permit_AD_Service` dACL in the authorization result, and the NAD sends a `session-start` accounting request. Once the user provides their credentials, a second authentication attempt is triggered for the user.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/user_login_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/user_login.png)
 
 The user authenticates successfully using their AD credentials. This time, ISE returns the `Internal_Only` dACL in the authorization result, and the NAD sends a `session-start` accounting request for the user session.
 
 Let's take a look at the Authentication report provided by ISE.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/report1_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/report1.png)
 
 As you can see, the request matched the `Location2_Wired` Policy Set and the `802.1x_User_Authz_2` Authorization policy, which returned the `Internal_Only` dACL as the authorization result.
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/MAR_IN_ACT_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/MAR_IN_ACT.png)
 
 The line **"24422 ISE has confirmed previous successful machine authentication for user in Active Directory"**, is the result of enabling **MAR**.
 
@@ -463,10 +463,10 @@ Method status list:
 
 ```
 
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Corpuser_Access_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Corpuser_Access.png)
 
 * Applying `Permit Access` (Full Access) for `netadmin` user:
-![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Netadmin_Access_min.png)
+![CMD as Administrator](/assets/img/posts_photos/MAB_PEAP/Netadmin_Access.png)
 
 ## Conclusion
 Implementing sequential machine-and-user authorization rules secures endpoints without the overhead of Machine Access Restrictions (MAR). By using Cisco ISE's native `Network Access:WasMachineAuthenticated` attribute, organizations create a dual-factor requirement: users must provide valid credentials and operate from a managed, Active Directory-joined asset. This prevents rogue or unmanaged personal devices from accessing internal networks.
