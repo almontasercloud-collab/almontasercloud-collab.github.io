@@ -138,7 +138,7 @@ Method status list:
 
 ![CMD as Administrator](/assets/img/posts_photos/TEAP/machine_auth2.png)
 
-The endpoints are then accessed using a Network Administrator account (`netadmin`) on one endpoint and a Corporate User account (`corpuser`) on the other to validate user authentication and verify the corresponding authorization and network access results.
+The endpoints are then accessed using a Network Administrator account (`netadmin`) on one endpoint and a Corporate User account (`corpuser`) on the other to validate user authentication and verify the corresponding authorization and network access results
 
 ![CMD as Administrator](/assets/img/posts_photos/TEAP/userauth1.png)
 
