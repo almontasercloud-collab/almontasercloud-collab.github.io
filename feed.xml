@@ -1,0 +1,153 @@
+
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://localhost:4000/</id>
+  <title>Almontaser Babiker</title>
+  <subtitle>Almontaser Babiker's technical portfolio and blog covering network engineering, Security technologies, automation, and infrastructure solutions.</subtitle>
+  <updated>2026-10-01T11:40:00+03:00</updated>
+  <author>
+    <name>Almontaser Babiker</name>
+    <uri>http://localhost:4000/</uri>
+  </author>
+  <link rel="self" type="application/atom+xml" href="http://localhost:4000/feed.xml"/>
+  <link rel="alternate" type="text/html" hreflang="en"
+    href="http://localhost:4000/"/>
+  <generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator>
+  <rights> © 2026 Almontaser Babiker </rights>
+  <icon>/assets/img/favicons/favicon.ico</icon>
+  <logo>/assets/img/favicons/favicon-96x96.png</logo>
+
+
+  
+  <entry>
+    <title>CWA using Cisco ISE</title>
+    <link href="http://localhost:4000/posts/cwa/" rel="alternate" type="text/html" title="CWA using Cisco ISE" />
+    <published>2026-09-03T12:25:00+03:00</published>
+  
+    <updated>2026-09-03T12:25:00+03:00</updated>
+  
+    <id>http://localhost:4000/posts/cwa/</id>
+    <content type="text/html" src="http://localhost:4000/posts/cwa/" />
+    <author>
+      <name>Almontaser Babiker</name>
+    </author>
+
+  
+    
+    <category term="Labs" />
+    
+    <category term="Cisco ISE" />
+    
+  
+
+  <summary></summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>EAP-Chaining with TEAP</title>
+    <link href="http://localhost:4000/posts/EAP-Chaining-With-TEAP/" rel="alternate" type="text/html" title="EAP-Chaining with TEAP" />
+    <published>2026-09-03T12:25:00+03:00</published>
+  
+    <updated>2026-09-03T12:25:00+03:00</updated>
+  
+    <id>http://localhost:4000/posts/EAP-Chaining-With-TEAP/</id>
+    <content type="text/html" src="http://localhost:4000/posts/EAP-Chaining-With-TEAP/" />
+    <author>
+      <name>Almontaser Babiker</name>
+    </author>
+
+  
+    
+    <category term="Labs" />
+    
+    <category term="Cisco ISE" />
+    
+  
+
+  <summary>The PEAP authentication method discussed previously relies on Machine Access Restriction (MAR) in Cisco ISE to associate machine and user authentication. Although this approach allows a domain-joined endpoint to authenticate the machine before the user, the previous lab PEAP &amp;amp; EAP-TLS demonstrated that MAR introduces limitations and additional considerations when maintaining the relationshi...</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>PEAP &amp; EAP-TLS — Machine and User AAA</title>
+    <link href="http://localhost:4000/posts/PEAP_&amp;EAP_TLS/" rel="alternate" type="text/html" title="PEAP &amp;amp; EAP-TLS — Machine and User AAA" />
+    <published>2026-08-07T12:25:00+03:00</published>
+  
+    <updated>2026-08-07T12:25:00+03:00</updated>
+  
+    <id>http://localhost:4000/posts/PEAP_&amp;EAP_TLS/</id>
+    <content type="text/html" src="http://localhost:4000/posts/PEAP_&amp;EAP_TLS/" />
+    <author>
+      <name>Almontaser Babiker</name>
+    </author>
+
+  
+    
+    <category term="Labs" />
+    
+    <category term="Cisco ISE" />
+    
+  
+
+  <summary>As the previous PEAP &amp;amp; MSCHAPv2 — Machine and User AAA lab article concluded, username and password authentication is not the most secure way to authenticate users or machines, especially given the common vulnerabilities inherent in credential-based methods. To address these persistent security gaps, this article explores a significantly more robust alternative: PEAP with EAP-TLS.  By combi...</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>PEAP &amp; MSCHAPv2 — Machine and User AAA</title>
+    <link href="http://localhost:4000/posts/PEAP_&amp;_MSCHAPv2/" rel="alternate" type="text/html" title="PEAP &amp;amp; MSCHAPv2 — Machine and User AAA" />
+    <published>2026-07-28T16:25:00+03:00</published>
+  
+    <updated>2026-07-28T16:25:00+03:00</updated>
+  
+    <id>http://localhost:4000/posts/PEAP_&amp;_MSCHAPv2/</id>
+    <content type="text/html" src="http://localhost:4000/posts/PEAP_&amp;_MSCHAPv2/" />
+    <author>
+      <name>Almontaser Babiker</name>
+    </author>
+
+  
+    
+    <category term="Labs" />
+    
+    <category term="Cisco ISE" />
+    
+  
+
+  <summary>Network access does not depend solely on whether a user is sitting behind a keyboard. A domain-joined endpoint may need network connectivity to locate domain controllers, apply Group Policy, and perform other machine-level operations before a user even enters their credentials. Once the user logs in, the same endpoint may need to transition into a different access profile based on the identity ...</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>NIC Teaming to Cisco Nexus vPC</title>
+    <link href="http://localhost:4000/posts/Nexus-vpc-nic-teaming/" rel="alternate" type="text/html" title="NIC Teaming to Cisco Nexus vPC" />
+    <published>2026-07-13T16:25:00+03:00</published>
+  
+    <updated>2026-07-13T16:25:00+03:00</updated>
+  
+    <id>http://localhost:4000/posts/Nexus-vpc-nic-teaming/</id>
+    <content type="text/html" src="http://localhost:4000/posts/Nexus-vpc-nic-teaming/" />
+    <author>
+      <name>Almontaser Babiker</name>
+    </author>
+
+  
+    
+    <category term="Labs" />
+    
+    <category term="Switching" />
+    
+  
+
+  <summary>Introduction  High availability at the server access layer is a common enterprise requirement. This lab demonstrates how Cisco Nexus vPC and Windows Server NIC Teaming using LACP can provide active-active connectivity while eliminating single points of failure.  Technology Overview Link Aggregation Control Protocol (LACP) in Windows Server  Windows Server supports IEEE 802.3ad Link Aggregation ...</summary>
+
+  </entry>
+
+</feed>
+
+
