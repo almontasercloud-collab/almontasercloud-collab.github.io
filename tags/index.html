@@ -35,13 +35,13 @@
 <meta property="og:url" content="https://almontaserbabiker.com/tags/" />
 <meta property="og:site_name" content="Almontaser Babiker" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2026-10-02T14:08:00+03:00" />
-<meta property="article:modified_time" content="2026-10-02T14:08:00+03:00" />
+<meta property="article:published_time" content="2026-10-03T19:08:11+03:00" />
+<meta property="article:modified_time" content="2026-10-03T19:08:11+03:00" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Tags" />
 <meta name="twitter:site" content="@" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2026-10-02T14:08:00+03:00","datePublished":"2026-10-02T14:08:00+03:00","description":"Almontaser Babiker’s technical portfolio and blog covering network engineering, Security technologies, automation, and infrastructure solutions.","headline":"Tags","mainEntityOfPage":{"@type":"WebPage","@id":"https://almontaserbabiker.com/tags/"},"url":"https://almontaserbabiker.com/tags/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2026-10-03T19:08:11+03:00","datePublished":"2026-10-03T19:08:11+03:00","description":"Almontaser Babiker’s technical portfolio and blog covering network engineering, Security technologies, automation, and infrastructure solutions.","headline":"Tags","mainEntityOfPage":{"@type":"WebPage","@id":"https://almontaserbabiker.com/tags/"},"url":"https://almontaserbabiker.com/tags/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -163,6 +163,130 @@
   
 
   <!-- A placeholder to allow defining custom metadata -->
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  const desktopViewport = window.matchMedia('(min-width: 850px)');
+  const targetElement = document.querySelector('#main-wrapper');
+
+  if (!targetElement) {
+    console.error('Vanta NET could not start: #main-wrapper was not found.');
+    return;
+  }
+
+  function toVantaColor(cssColor) {
+    const hexMatch = cssColor.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    let channels;
+
+    if (hexMatch) {
+      const hex =
+        hexMatch[1].length === 3
+          ? hexMatch[1].replace(/./g, (digit) => digit + digit)
+          : hexMatch[1];
+      channels = hex.match(/../g).map((channel) => parseInt(channel, 16));
+    } else {
+      const rgbMatch = cssColor.match(/^rgba?\(([^)]+)\)$/i);
+      if (rgbMatch) {
+        channels = rgbMatch[1].split(/[\s,/]+/).slice(0, 3).map(Number);
+      }
+    }
+
+    if (
+      !channels ||
+      channels.length !== 3 ||
+      channels.some(
+        (channel) => !Number.isFinite(channel) || channel < 0 || channel > 255
+      )
+    ) {
+      return null;
+    }
+
+    return (channels[0] << 16) | (channels[1] << 8) | channels[2];
+  }
+
+  function getThemeColors() {
+    const computedStyles = window.getComputedStyle(targetElement);
+    const colors = {
+      backgroundColor: toVantaColor(
+        computedStyles.backgroundColor
+      ),
+      color: toVantaColor(
+        computedStyles.getPropertyValue('--canvas-color').trim() ||
+          computedStyles.getPropertyValue('--link-color').trim()
+      )
+    };
+
+    if (colors.backgroundColor === null || colors.color === null) {
+      console.error('Vanta NET could not read the active theme colors.');
+      return null;
+    }
+
+    return colors;
+  }
+
+  let effect = null;
+
+  function updateEffect(restart = false) {
+    if (!desktopViewport.matches) {
+      if (effect) {
+        effect.destroy();
+        effect = null;
+      }
+      return;
+    }
+
+    if (effect) {
+      if (!restart) {
+        return;
+      }
+
+      effect.destroy();
+      effect = null;
+    }
+
+    if (!window.VANTA || typeof window.VANTA.NET !== 'function') {
+      console.error('Vanta NET could not start: Vanta.js failed to load.');
+      return;
+    }
+
+    const themeColors = getThemeColors();
+    if (!themeColors) {
+      return;
+    }
+
+    effect = window.VANTA.NET({
+      el: targetElement,
+      ...themeColors,
+      backgroundAlpha: 1,
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200,
+      minWidth: 200,
+      scale: 1,
+      scaleMobile: 1
+    });
+  }
+
+  new MutationObserver(() => {
+    updateEffect(true);
+  }).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-bs-theme']
+  });
+
+  desktopViewport.addEventListener('change', updateEffect);
+  updateEffect();
+});
+</script>
+
 
 </head>
 
