@@ -203,7 +203,6 @@
   
 
   <!-- A placeholder to allow defining custom metadata -->
-
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
 
@@ -214,10 +213,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   const desktopViewport = window.matchMedia('(min-width: 850px)');
-  const targetElement = document.querySelector('#main-wrapper');
+  const targetElement = document.querySelector('#vanta-background');
 
   if (!targetElement) {
-    console.error('Vanta NET could not start: #main-wrapper was not found.');
+    console.error('Vanta NET could not start: #vanta-background was not found.');
     return;
   }
 
@@ -272,6 +271,33 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   let effect = null;
+  let introActive =
+    document.documentElement.classList.contains('has-network-intro') &&
+    !document.documentElement.classList.contains('network-intro-settled');
+  let siteCanvasColor = null;
+
+  function getIntroCanvasColor() {
+    const theme =
+      document.documentElement.dataset.bsTheme ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    return theme === 'dark' ? 0x22d3ee : 0x000000;
+  }
+
+  document.addEventListener('network-intro-state', (event) => {
+    introActive = event.detail?.active === true;
+
+    if (!effect) {
+      return;
+    }
+
+    if (typeof effect.setOptions !== 'function') {
+      console.error('Vanta NET could not update its intro color.');
+      return;
+    }
+
+    effect.setOptions({ color: introActive ? getIntroCanvasColor() : siteCanvasColor });
+  });
 
   function updateEffect(restart = false) {
     if (!desktopViewport.matches) {
@@ -301,9 +327,12 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
+    siteCanvasColor = themeColors.color;
+
     effect = window.VANTA.NET({
       el: targetElement,
       ...themeColors,
+      ...(introActive && { color: getIntroCanvasColor() }),
       backgroundAlpha: 1,
       mouseControls: true,
       touchControls: true,
@@ -327,11 +356,16 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-
 </head>
 
 
-  <body>
+
+
+<body data-page-layout="page">
+    <div id="vanta-background" data-turbo-permanent aria-hidden="true"></div>
+
+    
+
     <!-- The Side Bar -->
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
@@ -3015,32 +3049,77 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <script>
   
-  document.addEventListener('DOMContentLoaded', () => {
-    SimpleJekyllSearch({
-      searchInput: document.getElementById('search-input'),
-      resultsContainer: document.getElementById('search-results'),
-      json: '/assets/js/data/search.json',
-      searchResultTemplate: '  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">    <header>      <h2><a href="{url}">{title}</a></h2>      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">        {categories}        {tags}      </div>    </header>    <p>{content}</p>  </article>',
-      noResultsText: '<p class="mt-5">Oops! No results found.</p>',
-      templateMiddleware: function(prop, value, template) {
-        if (prop === 'categories') {
-          if (value === '') {
-            return `${value}`;
-          } else {
-            return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+  if (!document.documentElement.hasAttribute('data-search-loader-bound')) {
+    document.documentElement.setAttribute('data-search-loader-bound', '');
+    function initializeSearch() {
+      if (typeof SimpleJekyllSearch !== 'function') {
+        const searchScript = [...document.scripts]
+          .reverse()
+          .find((script) => script.src.includes('simple-jekyll-search'));
+
+        if (searchScript) {
+          if (searchScript.dataset.searchInitPending) {
+            return;
           }
+
+          searchScript.dataset.searchInitPending = 'true';
+          searchScript.addEventListener(
+            'load',
+            () => {
+              delete searchScript.dataset.searchInitPending;
+              initializeSearch();
+            },
+            { once: true }
+          );
+          searchScript.addEventListener(
+            'error',
+            () => {
+              delete searchScript.dataset.searchInitPending;
+              console.error('Search could not initialize: SimpleJekyllSearch failed to load.');
+            },
+            { once: true }
+          );
+          window.setTimeout(() => {
+            if (searchScript.dataset.searchInitPending) {
+              delete searchScript.dataset.searchInitPending;
+              console.error('Search could not initialize: SimpleJekyllSearch failed to load.');
+            }
+          }, 10000);
+          return;
         }
 
-        if (prop === 'tags') {
-          if (value === '') {
-            return `${value}`;
-          } else {
-            return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+        console.error('Search could not initialize: SimpleJekyllSearch failed to load.');
+        return;
+      }
+
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('search-results'),
+        json: '/assets/js/data/search.json',
+        searchResultTemplate: '  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">    <header>      <h2><a href="{url}">{title}</a></h2>      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">        {categories}        {tags}      </div>    </header>    <p>{content}</p>  </article>',
+        noResultsText: '<p class="mt-5">Oops! No results found.</p>',
+        templateMiddleware: function(prop, value, template) {
+          if (prop === 'categories') {
+            if (value === '') {
+              return `${value}`;
+            } else {
+              return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+            }
+          }
+
+          if (prop === 'tags') {
+            if (value === '') {
+              return `${value}`;
+            } else {
+              return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+            }
           }
         }
-      }
-    });
-  });
+      });
+    }
+
+    document.addEventListener('turbo:load', initializeSearch);
+  }
 </script>
 
   </body>
