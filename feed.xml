@@ -4,7 +4,7 @@
   <id>https://almontaserbabiker.com/</id>
   <title>Almontaser Babiker</title>
   <subtitle>Almontaser Babiker's technical portfolio and blog covering network engineering, Security technologies, automation, and infrastructure solutions.</subtitle>
-  <updated>2026-10-04T19:10:13+03:00</updated>
+  <updated>2026-10-04T22:32:03+03:00</updated>
   <author>
     <name>Almontaser Babiker</name>
     <uri>https://almontaserbabiker.com/</uri>
@@ -66,7 +66,7 @@
     
   
 
-  <summary></summary>
+  <summary>Central Web Authentication (CWA) provides a way to authenticate network users through a web portal before granting normal network access. In this lab, Cisco ISE is used to control the authentication and authorization process, while the network access device redirects unauthenticated clients to the ISE Guest Portal.  The lab focuses on the complete CWA flow, starting from the initial network con...</summary>
 
   </entry>
 

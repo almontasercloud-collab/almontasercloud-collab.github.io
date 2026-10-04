@@ -15,7 +15,7 @@
     "categories": "Labs, Cisco ISE",
     "tags": "networking, Network Engineering, 802.1x, MAB, EAP_Chaining, TEAP, Machine_and_user_authentication, Machine_EAP-TLS_and_user_MSCHAPv2_authentication, security, cisco ISE, MSCHAPv2, EAP, EAP-TLS, Network Access Control, AAA, Network Access Control",
     "date": "2026-09-01 12:25:00 +0300",
-    "content": ""
+    "content": "Central Web Authentication (CWA) provides a way to authenticate network users through a web portal before granting normal network access. In this lab, Cisco ISE is used to control the authentication and authorization process, while the network access device redirects unauthenticated clients to the ISE Guest Portal.  The lab focuses on the complete CWA flow, starting from the initial network connection and restricted access, through web-based authentication, and finally to the authorization policy that determines what network access the endpoint receives.  The goal is to build and validate a practical CWA deployment with Cisco ISE, including the required authentication, authorization, redirect ACL, and post-authentication access controls."
   },
   
   {
