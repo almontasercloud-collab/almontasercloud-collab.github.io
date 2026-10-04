@@ -35,13 +35,13 @@
 <meta property="og:url" content="https://almontaserbabiker.com/tags/" />
 <meta property="og:site_name" content="Almontaser Babiker" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2026-10-03T22:22:45+03:00" />
-<meta property="article:modified_time" content="2026-10-03T22:22:45+03:00" />
+<meta property="article:published_time" content="2026-10-04T19:10:13+03:00" />
+<meta property="article:modified_time" content="2026-10-04T19:10:13+03:00" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Tags" />
 <meta name="twitter:site" content="@" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2026-10-03T22:22:45+03:00","datePublished":"2026-10-03T22:22:45+03:00","description":"Almontaser Babiker’s technical portfolio and blog covering network engineering, Security technologies, automation, and infrastructure solutions.","headline":"Tags","mainEntityOfPage":{"@type":"WebPage","@id":"https://almontaserbabiker.com/tags/"},"url":"https://almontaserbabiker.com/tags/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2026-10-04T19:10:13+03:00","datePublished":"2026-10-04T19:10:13+03:00","description":"Almontaser Babiker’s technical portfolio and blog covering network engineering, Security technologies, automation, and infrastructure solutions.","headline":"Tags","mainEntityOfPage":{"@type":"WebPage","@id":"https://almontaserbabiker.com/tags/"},"url":"https://almontaserbabiker.com/tags/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -172,7 +172,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
-  const desktopViewport = window.matchMedia('(min-width: 850px)');
   const targetElement = document.querySelector('#vanta-background');
 
   if (!targetElement) {
@@ -231,36 +230,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   let effect = null;
-  let introActive =
-    document.documentElement.classList.contains('has-network-intro') &&
-    !document.documentElement.classList.contains('network-intro-settled');
-  let siteCanvasColor = null;
-
-  function getIntroCanvasColor() {
-    const theme =
-      document.documentElement.dataset.bsTheme ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
-    return theme === 'dark' ? 0x22d3ee : 0x000000;
-  }
-
-  document.addEventListener('network-intro-state', (event) => {
-    introActive = event.detail?.active === true;
-
-    if (!effect) {
-      return;
-    }
-
-    if (typeof effect.setOptions !== 'function') {
-      console.error('Vanta NET could not update its intro color.');
-      return;
-    }
-
-    effect.setOptions({ color: introActive ? getIntroCanvasColor() : siteCanvasColor });
-  });
-
   function updateEffect(restart = false) {
-    if (!desktopViewport.matches) {
+    if (document.body.dataset.pageLayout === 'post') {
       if (effect) {
         effect.destroy();
         effect = null;
@@ -287,12 +258,9 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    siteCanvasColor = themeColors.color;
-
     effect = window.VANTA.NET({
       el: targetElement,
       ...themeColors,
-      ...(introActive && { color: getIntroCanvasColor() }),
       backgroundAlpha: 1,
       mouseControls: true,
       touchControls: true,
@@ -311,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
     attributeFilter: ['data-bs-theme']
   });
 
-  desktopViewport.addEventListener('change', updateEffect);
+  document.addEventListener('turbo:load', () => updateEffect());
   updateEffect();
 });
 </script>
