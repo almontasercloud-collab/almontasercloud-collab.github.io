@@ -13,8 +13,20 @@
 
 <!-- `site.alt_lang` can specify a language different from the UI -->
 <html
-  lang="en"class="has-network-intro">
+  lang="en"
+  class="has-network-intro">
   <head>
+  <script>
+    try {
+      if (localStorage.getItem('network-intro-seen') === 'true') {
+        document.documentElement.classList.add('network-intro-settled');
+      }
+    } catch (error) {
+      document.documentElement.classList.add('network-intro-settled');
+      console.warn('Unable to check the network intro preference.', error);
+    }
+  </script>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
@@ -326,15 +338,13 @@ document.addEventListener('DOMContentLoaded', function () {
 </head>
 
 
-
   <noscript>
     <style>
-      html.has-network-intro:not(.network-intro-settled) {
+      html.has-network-intro {
         overflow-y: auto;
       }
 
-      body.has-network-intro:not(.network-intro-settled)
-      > :not(#welcome-intro) {
+      body > :not(#welcome-intro) {
         visibility: visible;
       }
 
@@ -344,12 +354,10 @@ document.addEventListener('DOMContentLoaded', function () {
     </style>
   </noscript>
 
-
 <body data-page-layout="home" class="has-network-intro">
     <div id="vanta-background" data-turbo-permanent aria-hidden="true"></div>
 
-    
-      <div id="welcome-intro" class="welcome-intro">
+    <div id="welcome-intro" class="welcome-intro">
   <div class="welcome-intro-grid" aria-hidden="true"></div>
 
   <div class="welcome-intro-content">
@@ -372,7 +380,6 @@ document.addEventListener('DOMContentLoaded', function () {
   </p>
 </div>
 
-    
 
     <!-- The Side Bar -->
 

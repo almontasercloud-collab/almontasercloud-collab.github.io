@@ -13,8 +13,20 @@
 
 <!-- `site.alt_lang` can specify a language different from the UI -->
 <html
-  lang="en">
+  lang="en"
+  class="has-network-intro">
   <head>
+  <script>
+    try {
+      if (localStorage.getItem('network-intro-seen') === 'true') {
+        document.documentElement.classList.add('network-intro-settled');
+      }
+    } catch (error) {
+      document.documentElement.classList.add('network-intro-settled');
+      console.warn('Unable to check the network intro preference.', error);
+    }
+  </script>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
@@ -318,12 +330,48 @@ document.addEventListener('DOMContentLoaded', function () {
 </head>
 
 
+  <noscript>
+    <style>
+      html.has-network-intro {
+        overflow-y: auto;
+      }
 
+      body > :not(#welcome-intro) {
+        visibility: visible;
+      }
 
-<body data-page-layout="page">
+      #welcome-intro {
+      display: none !important;
+      }
+    </style>
+  </noscript>
+
+<body data-page-layout="page" class="has-network-intro">
     <div id="vanta-background" data-turbo-permanent aria-hidden="true"></div>
 
-    
+    <div id="welcome-intro" class="welcome-intro">
+  <div class="welcome-intro-grid" aria-hidden="true"></div>
+
+  <div class="welcome-intro-content">
+    <p class="welcome-intro-eyebrow">
+      <span class="welcome-intro-status" aria-hidden="true"></span>
+      PERSONAL KNOWLEDGE BASE
+    </p>
+
+    <h1 aria-label="Welcome To My Networking and Security Space — Almontaser Babiker _">
+      <span data-typed-text aria-hidden="true">Welcome To My Networking and Security Space — Almontaser Babiker</span>
+      <span class="welcome-intro-cursor" aria-hidden="true">_</span>
+    </h1>
+
+    <p class="welcome-intro-caption">NETWORKING <span>/</span> SECURITY <span>/</span> ENGINEERING</p>
+  </div>
+
+  <p class="welcome-intro-footer" aria-hidden="true">
+    <span>SECURE CONNECTION ESTABLISHED</span>
+    <span class="welcome-intro-index">01 <i></i> 03</span>
+  </p>
+</div>
+
 
     <!-- The Side Bar -->
 

@@ -13,8 +13,20 @@
 
 <!-- `site.alt_lang` can specify a language different from the UI -->
 <html
-  lang="en">
+  lang="en"
+  class="has-network-intro">
   <head>
+  <script>
+    try {
+      if (localStorage.getItem('network-intro-seen') === 'true') {
+        document.documentElement.classList.add('network-intro-settled');
+      }
+    } catch (error) {
+      document.documentElement.classList.add('network-intro-settled');
+      console.warn('Unable to check the network intro preference.', error);
+    }
+  </script>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
@@ -29,8 +41,8 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Certifications" />
 <meta property="og:locale" content="en" />
-<meta name="description" content="THE LEARNING JOURNEY Earned, not collected From networking fundamentals to enterprise security and access control, each credential marks a skill built through hands-on work. 07credentials3 providers" />
-<meta name="twitter:description" property="og:description" content="THE LEARNING JOURNEY Earned, not collected From networking fundamentals to enterprise security and access control, each credential marks a skill built through hands-on work. 07credentials3 providers" />
+<meta name="description" content="THE LEARNING JOURNEY Earned, not collected 07credentials3 providers" />
+<meta name="twitter:description" property="og:description" content="THE LEARNING JOURNEY Earned, not collected 07credentials3 providers" />
 <link rel="canonical" href="https://almontaserbabiker.com/certifications/" />
 <meta property="og:url" content="https://almontaserbabiker.com/certifications/" />
 <meta property="og:site_name" content="Almontaser Babiker" />
@@ -41,7 +53,7 @@
 <meta name="twitter:title" content="Certifications" />
 <meta name="twitter:site" content="@" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2026-06-19T12:00:00+03:00","datePublished":"2026-06-19T12:00:00+03:00","description":"THE LEARNING JOURNEY Earned, not collected From networking fundamentals to enterprise security and access control, each credential marks a skill built through hands-on work. 07credentials3 providers","headline":"Certifications","mainEntityOfPage":{"@type":"WebPage","@id":"https://almontaserbabiker.com/certifications/"},"url":"https://almontaserbabiker.com/certifications/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2026-06-19T12:00:00+03:00","datePublished":"2026-06-19T12:00:00+03:00","description":"THE LEARNING JOURNEY Earned, not collected 07credentials3 providers","headline":"Certifications","mainEntityOfPage":{"@type":"WebPage","@id":"https://almontaserbabiker.com/certifications/"},"url":"https://almontaserbabiker.com/certifications/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -327,12 +339,48 @@ document.addEventListener('DOMContentLoaded', function () {
 </head>
 
 
+  <noscript>
+    <style>
+      html.has-network-intro {
+        overflow-y: auto;
+      }
 
+      body > :not(#welcome-intro) {
+        visibility: visible;
+      }
 
-<body data-page-layout="page">
+      #welcome-intro {
+      display: none !important;
+      }
+    </style>
+  </noscript>
+
+<body data-page-layout="page" class="has-network-intro">
     <div id="vanta-background" data-turbo-permanent aria-hidden="true"></div>
 
-    
+    <div id="welcome-intro" class="welcome-intro">
+  <div class="welcome-intro-grid" aria-hidden="true"></div>
+
+  <div class="welcome-intro-content">
+    <p class="welcome-intro-eyebrow">
+      <span class="welcome-intro-status" aria-hidden="true"></span>
+      PERSONAL KNOWLEDGE BASE
+    </p>
+
+    <h1 aria-label="Welcome To My Networking and Security Space — Almontaser Babiker _">
+      <span data-typed-text aria-hidden="true">Welcome To My Networking and Security Space — Almontaser Babiker</span>
+      <span class="welcome-intro-cursor" aria-hidden="true">_</span>
+    </h1>
+
+    <p class="welcome-intro-caption">NETWORKING <span>/</span> SECURITY <span>/</span> ENGINEERING</p>
+  </div>
+
+  <p class="welcome-intro-footer" aria-hidden="true">
+    <span>SECURE CONNECTION ESTABLISHED</span>
+    <span class="welcome-intro-index">01 <i></i> 03</span>
+  </p>
+</div>
+
 
     <!-- The Side Bar -->
 
@@ -1220,10 +1268,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		<div>
 			<p class="credential-showcase-eyebrow">THE LEARNING JOURNEY</p>
 			<h2 id="credential-showcase-title"><span class="me-2">Earned, not collected</span><a href="#credential-showcase-title" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
-			<p class="content-highlight-card">From networking fundamentals to enterprise security and access control, each credential marks a skill built through hands-on work.</p>
 		</div>
 		<div class="credential-showcase-count"><strong>07</strong><span>credentials<br />3 providers</span></div>
 	</header>
+
+	<p class="credential-showcase-intro content-highlight-card">From networking fundamentals to enterprise security and access control, each credential marks a skill built through hands-on work.</p>
 
 	<div class="credential-grid">
 		<article class="credential-card credential-card--cisco">
