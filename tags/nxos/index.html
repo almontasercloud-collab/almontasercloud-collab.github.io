@@ -348,22 +348,44 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="welcome-intro-grid" aria-hidden="true"></div>
 
   <div class="welcome-intro-content">
-    <p class="welcome-intro-eyebrow">
-      <span class="welcome-intro-status" aria-hidden="true"></span>
-      PERSONAL KNOWLEDGE BASE
-    </p>
-
     <h1 aria-label="Welcome To My Networking and Security Space — Almontaser Babiker _">
       <span data-typed-text aria-hidden="true">Welcome To My Networking and Security Space — Almontaser Babiker</span>
       <span class="welcome-intro-cursor" aria-hidden="true">_</span>
     </h1>
 
+    <div class="welcome-intro-loader" aria-hidden="true">
+      <div class="welcome-intro-load-heading">
+        <span>INITIALIZING SECURE CONNECTION</span>
+        <span data-intro-percent>0%</span>
+      </div>
+      <div class="welcome-intro-load-track">
+        <span class="welcome-intro-load-progress" data-intro-progress></span>
+      </div>
+      <ul class="welcome-intro-load-steps">
+        <li class="is-upcoming" data-intro-step="upcoming">
+          <span class="welcome-intro-step-indicator"></span>
+          <span class="welcome-intro-step-message">Resolving network route</span>
+          <span class="welcome-intro-step-state">NEXT</span>
+        </li>
+        <li class="is-active" data-intro-step="active">
+          <span class="welcome-intro-step-indicator"></span>
+          <span class="welcome-intro-step-message">Establishing secure connection</span>
+          <span class="welcome-intro-step-state">RUNNING</span>
+        </li>
+        <li class="is-complete" data-intro-step="complete">
+          <span class="welcome-intro-step-indicator"></span>
+          <span class="welcome-intro-step-message">Session initialized</span>
+          <span class="welcome-intro-step-state">COMPLETED</span>
+        </li>
+      </ul>
+    </div>
+
     <p class="welcome-intro-caption">NETWORKING <span>/</span> SECURITY <span>/</span> ENGINEERING</p>
   </div>
 
   <p class="welcome-intro-footer" aria-hidden="true">
-    <span>SECURE CONNECTION ESTABLISHED</span>
-    <span class="welcome-intro-index">01 <i></i> 03</span>
+    <span>© 2026 Almontaser Babiker. All rights reserved.</span>
+    <span class="welcome-intro-index">1996 <i></i> 2026</span>
   </p>
 </div>
 
